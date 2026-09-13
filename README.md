@@ -2,7 +2,7 @@
 
 Página pessoal de início do dia: horário, clima, radar de chuva e notícias em uma única tela, com fundo que muda conforme a hora e o tempo em Piraju/SP.
 
-Feita só com HTML, CSS e JavaScript. Não precisa de servidor, Node, banco de dados ou chave de API: basta abrir o `index.html`.
+Visual retrowave: sol listrado nascendo e se pondo num horizonte de grade neon, paleta roxo/magenta/ciano que muda com a hora e o tempo, números grandes em Orbitron com brilho. Feita só com HTML, CSS e JavaScript. Não precisa de servidor, Node, banco de dados ou chave de API: basta abrir o `index.html`.
 
 ## Como abrir
 
@@ -122,7 +122,7 @@ Nenhuma chave de API é usada. Se algum serviço gratuito mudar, a página conti
 ```text
 index.html          estrutura da página
 css/style.css       estilos, cenas do fundo e animações
-fonts/              Sora (auto-hospedada, funciona offline)
+fonts/              Sora e Orbitron (auto-hospedadas, funcionam offline)
 assets/favicon.svg
 js/
   config.js         configuração
