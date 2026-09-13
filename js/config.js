@@ -55,14 +55,13 @@ const CONFIG = {
     // Ajuste (%) aplicado ao preço só para avaliar a sua posição. Corretoras como o Mercado Pago
     // mostram o valor pelo preço de venda delas, ~0,5% abaixo da média de mercado.
     ajusteVenda: -0.5,
-    // Sua posição em Bitcoin — NÃO coloque aqui se o projeto for publicado (o repositório é público).
-    // Use um destes caminhos:
-    //   • PC: crie js/config.local.js (ignorado pelo Git) com
-    //         CONFIG.cotacoesOpcoes.aportes = [{ btc: 0.01, investido: 5000 }];
-    //   • TV/celular: abra a página uma vez com ?btc=0.01&investido=5000 (fica salvo só naquele navegador;
-    //         ?btc=limpar apaga). Também aceita &precoMedio=350000 ou &data=2024-03-10.
+    // Sua posição em Bitcoin. Atenção: este arquivo é público no GitHub Pages — quem tiver o link
+    // vê o valor da posição. Para manter privado, apague daqui e use js/config.local.js (ignorado
+    // pelo Git) ou abra a página uma vez com ?btc=…&investido=… (fica salvo só naquele navegador).
     // Cada aporte pode ser { btc }, { btc, investido }, { investido, precoMedio } ou { investido, data }.
-    aportes: []
+    aportes: [
+      { btc: 0.02006834, investido: 9850 } // comprado por R$ 10.000 no Mercado Pago (R$ 9.850 em BTC + R$ 150 de taxa)
+    ]
   },
 
   dicasOpcoes: {
