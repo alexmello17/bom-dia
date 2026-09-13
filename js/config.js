@@ -49,6 +49,7 @@ const CONFIG = {
   },
 
   cotacoesOpcoes: {
+    dolar: true, // mostra o dólar comercial (AwesomeAPI, sem chave) ao lado do Bitcoin
     // "tudo" mostra os valores em R$ da sua posição; "percentual" mostra só a variação em %
     // (útil se a página for publicada em um endereço público)
     exibir: "tudo",

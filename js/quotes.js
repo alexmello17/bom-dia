@@ -24,6 +24,35 @@ const Quotes = (() => {
     }
   }
 
+  // ---------- dólar comercial (AwesomeAPI, sem chave) ----------
+  const AWESOME = "https://economia.awesomeapi.com.br/json";
+  async function getDollar() {
+    if (!CONFIG.cotacoesOpcoes.dolar) return null;
+    try {
+      const [last, hist] = await Promise.all([
+        Util.fetchJSON(`${AWESOME}/last/USD-BRL`, { timeout: 10000 }),
+        getDollarHistory()
+      ]);
+      const u = last.USDBRL;
+      return { brl: Number(u.bid), change: Number(u.pctChange), at: new Date(Number(u.timestamp) * 1000), spark: hist };
+    } catch (e) {
+      console.warn("[dólar]", e.message);
+      return data?.dollar || null; // mantém o último válido
+    }
+  }
+  async function getDollarHistory() {
+    const cached = Util.storage.get("usd-7d");
+    if (cached && Date.now() - cached.at < 60 * 60 * 1000) return cached.points;
+    try {
+      const d = await Util.fetchJSON(`${AWESOME}/daily/USD-BRL/8`, { timeout: 10000 });
+      const points = d.map(x => Number(x.bid)).reverse(); // a API devolve do mais recente para o mais antigo
+      Util.storage.set("usd-7d", { at: Date.now(), points });
+      return points;
+    } catch (e) {
+      return cached ? cached.points : null;
+    }
+  }
+
   // ---------- últimos 7 dias (cache de 30 min) ----------
   async function getSparkline() {
     const cached = Util.storage.get("btc-7d");
@@ -123,8 +152,21 @@ const Quotes = (() => {
   const arrow = (n) => n >= 0 ? "▲" : "▼";
   const dir = (n) => n >= 0 ? "up" : "down";
 
+  function renderDollar(u) {
+    if (!els.usd) return;
+    els.usd.hidden = !u;
+    if (!u) return;
+    els.usdPrice.textContent = brl(u.brl, 2);
+    els.usdChange.textContent = `${arrow(u.change)} ${pct(u.change)} hoje`;
+    els.usdChange.className = `quote-change ${dir(u.change)}`;
+    els.usdSpark.innerHTML = sparklineSvg(u.spark);
+    els.usdSpark.className = `quote-spark-wrap ${u.spark ? dir(u.spark[u.spark.length - 1] - u.spark[0]) : ""}`;
+    els.usd.title = `Dólar comercial, cotação de ${Util.formatHour(u.at)}`;
+  }
+
   function render(d) {
     els.box.classList.remove("is-empty");
+    renderDollar(d.dollar);
     els.price.textContent = brl(d.price.brl);
     els.change.textContent = `${arrow(d.price.change24h)} ${pct(d.price.change24h)} hoje`;
     els.change.className = `quote-change ${dir(d.price.change24h)}`;
@@ -153,8 +195,8 @@ const Quotes = (() => {
 
   async function refresh() {
     try {
-      const [price, spark, position] = await Promise.all([getBitcoin(), getSparkline(), resolvePosition()]);
-      data = { price, spark, position, updatedAt: new Date() };
+      const [price, spark, position, dollar] = await Promise.all([getBitcoin(), getSparkline(), resolvePosition(), getDollar()]);
+      data = { price, spark, position, dollar, updatedAt: new Date() };
       Util.storage.set("quotes", data);
       render(data);
       Status.set("quotes", { state: "ok", at: data.updatedAt });
@@ -173,16 +215,21 @@ const Quotes = (() => {
     els.change = Util.$("#quote-change");
     els.spark = Util.$("#quote-spark");
     els.position = Util.$("#quote-position");
+    els.usd = Util.$("#quote-usd");
+    els.usdPrice = Util.$("#quote-usd-price");
+    els.usdChange = Util.$("#quote-usd-change");
+    els.usdSpark = Util.$("#quote-usd-spark");
     const cached = Util.storage.get("quotes");
     if (cached) {
       try {
         cached.updatedAt = new Date(cached.updatedAt);
         cached.price.at = new Date(cached.price.at);
+        if (cached.dollar) cached.dollar.at = new Date(cached.dollar.at);
         data = cached; render(data);
         Status.set("quotes", { state: "ok", at: data.updatedAt });
       } catch (e) { console.warn("cache de cotações inválido", e); }
     }
   }
 
-  return { init, refresh, getBitcoin, getSparkline, resolvePosition };
+  return { init, refresh, getBitcoin, getDollar, getSparkline, resolvePosition };
 })();

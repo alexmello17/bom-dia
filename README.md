@@ -108,6 +108,7 @@ O repositório é público, então a posição em Bitcoin não fica no código:
 | Qualidade do ar | [Open-Meteo Air Quality](https://open-meteo.com/en/docs/air-quality-api) | Índice AQI (EUA) com PM2,5 e PM10; se falhar, o resto do clima continua. |
 | Radar de chuva | [RainViewer](https://www.rainviewer.com/api.html) | Últimos ~60 min + previsão de 30 min quando disponível. O serviço público entrega radar até o zoom 7; acima disso a imagem é ampliada. |
 | Mapa-base | Esri (World Dark Gray / World Imagery) | Tiles públicos com atribuição no próprio mapa. |
+| Dólar comercial | [AwesomeAPI](https://docs.awesomeapi.com.br) | Cotação, variação do dia e últimos 7 dias; sem chave. `cotacoesOpcoes.dolar: false` esconde. |
 | Bitcoin | [CoinGecko](https://www.coingecko.com/api) (preço, 24 h, 7 dias) e [Binance](https://binance-docs.github.io/apidocs/spot/en/) (reserva e histórico) | Sem chave; [AwesomeAPI](https://docs.awesomeapi.com.br) para o dólar em datas antigas. |
 | Notícias | RSS de G1, BBC Brasil, Folha e Agência Brasil | Como a página roda em `file://`, feeds sem CORS passam por [rss2json](https://rss2json.com) (ou allorigins como reserva). |
 

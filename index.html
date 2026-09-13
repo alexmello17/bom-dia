@@ -45,16 +45,28 @@
         <p id="date" class="date">—</p>
       </header>
 
-      <div id="quotes" class="quotes is-empty" aria-label="Cotação do Bitcoin">
-        <div class="quote-main">
-          <div class="quote-text">
-            <span class="quote-name">Bitcoin</span>
-            <span class="quote-row">
-              <span id="quote-price" class="quote-price">—</span>
-              <span id="quote-change" class="quote-change"></span>
-            </span>
+      <div id="quotes" class="quotes is-empty" aria-label="Cotações">
+        <div class="quote-grid">
+          <div class="quote-main">
+            <div class="quote-text">
+              <span class="quote-name">Bitcoin</span>
+              <span class="quote-row">
+                <span id="quote-price" class="quote-price">—</span>
+                <span id="quote-change" class="quote-change"></span>
+              </span>
+            </div>
+            <div id="quote-spark" class="quote-spark-wrap" aria-hidden="true"></div>
           </div>
-          <div id="quote-spark" class="quote-spark-wrap" aria-hidden="true"></div>
+          <div id="quote-usd" class="quote-main quote-main--usd" hidden>
+            <div class="quote-text">
+              <span class="quote-name">Dólar</span>
+              <span class="quote-row">
+                <span id="quote-usd-price" class="quote-price">—</span>
+                <span id="quote-usd-change" class="quote-change"></span>
+              </span>
+            </div>
+            <div id="quote-usd-spark" class="quote-spark-wrap" aria-hidden="true"></div>
+          </div>
         </div>
         <p id="quote-position" class="quote-position" hidden></p>
         <p class="section-status" data-status="quotes"></p>
