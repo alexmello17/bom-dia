@@ -1,0 +1,9 @@
+# dados pessoais (posição em BTC etc.)
+js/config.local.js
+
+# ferramentas locais
+.claude/
+.agents/
+skills-lock.json
+Thumbs.db
+.DS_Store

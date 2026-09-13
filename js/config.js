@@ -1,0 +1,98 @@
+/* =========================================================
+   Bom Dia — configuração
+   Tudo que é pessoal ou ajustável fica aqui.
+   Nenhuma chave de API é necessária para as fontes padrão.
+   ========================================================= */
+
+const CONFIG = {
+  nome: "Alex",
+  // "auto" alterna entre Bom dia / Boa tarde / Boa noite conforme a hora.
+  // Qualquer outro texto (ex.: "Bom dia") fica fixo.
+  saudacao: "auto",
+
+  cidade: "Piraju",
+  estado: "SP",
+  pais: "BR",
+
+  // Coordenadas opcionais. Se ficarem em null, a cidade é localizada
+  // automaticamente (Open-Meteo Geocoding) e o resultado fica em cache.
+  latitude: null,
+  longitude: null,
+
+  clima: true,
+  radar: true,
+  noticias: true,
+
+  cotacoes: true,
+  dicas: true, // dica de filme/série do dia
+
+  // Modo TV: margem de segurança nas bordas e efeitos mais leves (também ativável com ?tv=1)
+  modoTV: false,
+
+  // Intervalos de atualização (em segundos)
+  intervalos: {
+    clima: 10 * 60,
+    radar: 10 * 60,
+    noticias: 5 * 60,
+    cotacoes: 2 * 60,
+    dicas: 60 * 60, // só confere se o dia virou
+    tentarNovamente: 60 // quando uma atualização falha
+  },
+
+  radarOpcoes: {
+    zoom: 8,
+    // Esquema de cores do RainViewer (o serviço público hoje entrega sempre o "Universal Blue")
+    esquemaCores: 2,
+    quadrosPassados: 6, // últimos ~60 min (1 quadro a cada 10 min)
+    velocidadeMs: 650,
+    mapaPadrao: "mapa" // "mapa" ou "satelite"
+  },
+
+  cotacoesOpcoes: {
+    // "tudo" mostra os valores em R$ da sua posição; "percentual" mostra só a variação em %
+    // (útil se a página for publicada em um endereço público)
+    exibir: "tudo",
+    // Ajuste (%) aplicado ao preço só para avaliar a sua posição. Corretoras como o Mercado Pago
+    // mostram o valor pelo preço de venda delas, ~0,5% abaixo da média de mercado.
+    ajusteVenda: -0.5,
+    // Sua posição em Bitcoin — NÃO coloque aqui se o projeto for publicado (o repositório é público).
+    // Use um destes caminhos:
+    //   • PC: crie js/config.local.js (ignorado pelo Git) com
+    //         CONFIG.cotacoesOpcoes.aportes = [{ btc: 0.01, investido: 5000 }];
+    //   • TV/celular: abra a página uma vez com ?btc=0.01&investido=5000 (fica salvo só naquele navegador;
+    //         ?btc=limpar apaga). Também aceita &precoMedio=350000 ou &data=2024-03-10.
+    // Cada aporte pode ser { btc }, { btc, investido }, { investido, precoMedio } ou { investido, data }.
+    aportes: []
+  },
+
+  dicasOpcoes: {
+    intervalo: 10,   // segundos entre uma dica e outra (0 = uma dica por dia)
+    deslocamento: 0  // com intervalo 0, pula para outro título sem esperar o dia seguinte
+  },
+
+  noticiasOpcoes: {
+    maximo: 15,
+    maximoPorFonte: 4, // evita que uma fonte muito ativa domine o feed
+    carrossel: {
+      intervalo: 10, // segundos por página (0 desliga a troca automática)
+      pausarComMouse: true
+    },
+    // Fontes RSS em português. "direto: true" indica que o feed já aceita
+    // acesso direto do navegador; os demais passam por um conversor RSS→JSON.
+    fontes: [
+      { nome: "G1", url: "https://g1.globo.com/rss/g1/politica/" },
+      { nome: "G1", url: "https://g1.globo.com/rss/g1/economia/" },
+      { nome: "G1", url: "https://g1.globo.com/rss/g1/mundo/" },
+      { nome: "BBC Brasil", url: "https://feeds.bbci.co.uk/portuguese/rss.xml" },
+      { nome: "Folha", url: "https://feeds.folha.uol.com.br/emcimadahora/rss091.xml" },
+      { nome: "Agência Brasil", url: "https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml", direto: true }
+    ],
+    // Serviços usados para contornar CORS quando o feed não permite acesso direto.
+    // A ordem importa: o primeiro que responder é usado.
+    conversores: [
+      (url) => ({ tipo: "rss2json", url: "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(url) }),
+      (url) => ({ tipo: "xml", url: "https://api.allorigins.win/raw?url=" + encodeURIComponent(url) }),
+      (url) => ({ tipo: "allorigins", url: "https://api.allorigins.win/get?url=" + encodeURIComponent(url) })
+    ]
+  }
+};
