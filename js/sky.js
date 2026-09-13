@@ -154,6 +154,8 @@ const Sky = (() => {
     buildStars();
     renderMoon();
     update();
+    // só liga as transições depois do primeiro quadro: a cena inicial aparece pronta, sem sol "deslizando"
+    requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("ready")));
     setInterval(update, 60 * 1000);
     setInterval(renderMoon, 60 * 60 * 1000);
     Weather.onUpdate(() => renderMoon()); // o hemisfério vem da localização

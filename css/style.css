@@ -86,6 +86,9 @@ button { font: inherit; color: inherit; }
    CÉU — fundo dinâmico
    ========================================================= */
 
+/* antes do primeiro quadro, nada anima de posição: a cena já nasce no lugar */
+body:not(.ready) #sky * { transition: none !important; }
+
 #sky {
   position: fixed;
   inset: 0;
@@ -137,12 +140,39 @@ body.scene-night     { --sun-x: 44%; --sun-y: 130%; --sun-o: 0;   --sun-size: 36
   will-change: transform;
 }
 /* disco listrado: as faixas ficam mais largas perto da base, como nos posteres dos anos 80 */
-.sky-sun::after {
+.sky-sun::before, .sky-sun::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: linear-gradient(180deg, #fff2a8 0%, #ffd05a 30%, #ff8a3d 58%, #ff2bd6 100%);
+}
+/* contorno: fio claro na borda do disco + anel fino de brilho por fora */
+.sky-sun::before {
+  inset: -2px;
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 252, 235, .98),   /* fio claro na borda */
+    inset 0 0 0 4px rgba(120, 20, 90, .45),     /* linha escura fina, separa o disco do céu */
+    inset 0 0 22px rgba(255, 255, 255, .28),
+    0 0 0 1.5px rgba(255, 200, 245, .55),       /* anel externo */
+    0 0 16px 3px rgba(255, 120, 220, .45);
+  z-index: 1;
+}
+.sky-sun::after {
+  background: linear-gradient(180deg, #fff7b8 0%, #ffd23a 32%, #ff7f26 62%, #ff1e9c 100%);
+  -webkit-mask-image: linear-gradient(180deg,
+    #000 0 52%, transparent 52% 54%,
+    #000 54% 61%, transparent 61% 64%,
+    #000 64% 71%, transparent 71% 75%,
+    #000 75% 81%, transparent 81% 86%,
+    #000 86% 91%, transparent 91% 100%);
+          mask-image: linear-gradient(180deg,
+    #000 0 52%, transparent 52% 54%,
+    #000 54% 61%, transparent 61% 64%,
+    #000 64% 71%, transparent 71% 75%,
+    #000 75% 81%, transparent 81% 86%,
+    #000 86% 91%, transparent 91% 100%);
+}
+.sky-sun::before {
   -webkit-mask-image: linear-gradient(180deg,
     #000 0 52%, transparent 52% 54%,
     #000 54% 61%, transparent 61% 64%,
@@ -157,6 +187,7 @@ body.scene-night     { --sun-x: 44%; --sun-y: 130%; --sun-o: 0;   --sun-size: 36
     #000 86% 91%, transparent 91% 100%);
 }
 /* No horizonte só a metade de cima aparece: as faixas ficam logo acima da linha */
+body.scene-sunset .sky-sun::before, body.scene-dawn .sky-sun::before,
 body.scene-sunset .sky-sun::after, body.scene-dawn .sky-sun::after {
   -webkit-mask-image: linear-gradient(180deg,
     #000 0 26%, transparent 26% 27.5%,
@@ -224,7 +255,7 @@ body.wx-cloudy .sky-sun { opacity: calc(var(--sun-o, 0) * .5); }
   position: absolute;
   inset: 0;
   background: repeating-linear-gradient(180deg, rgba(0, 0, 0, .18) 0 1px, transparent 1px 4px);
-  opacity: .35;
+  opacity: .25;
   mix-blend-mode: multiply;
 }
 
@@ -289,30 +320,47 @@ body.wx-rain .sky-stars, body.wx-storm .sky-stars, body.wx-fog .sky-stars { opac
   inset: 0;
   opacity: .3;
   transition: opacity 3s var(--ease);
+  --cloud-top: rgba(255, 255, 255, .20);
+  --cloud-bottom: rgba(36, 10, 72, .55);
+  --cloud-line: rgba(var(--grid, 255, 120, 220), .55);
 }
-.sky-clouds i {
+.cloud-stop-top { stop-color: var(--cloud-top, rgba(255, 255, 255, .2)); }
+.cloud-stop-bottom { stop-color: var(--cloud-bottom, rgba(36, 10, 72, .55)); }
+.cloud {
   position: absolute;
-  border-radius: 50%;
-  background: var(--cloud, rgba(255, 255, 255, .35));
-  filter: blur(42px);
+  height: auto;
+  overflow: visible;
   animation: drift linear infinite;
   will-change: transform;
-  transition: background 3s var(--ease);
+  filter: drop-shadow(0 0 10px rgba(var(--grid, 255, 120, 220), .22));
 }
-.sky-clouds i:nth-child(1) { top: 6%;  width: 48vw; height: 18vh; animation-duration: 150s; animation-delay: -40s; }
-.sky-clouds i:nth-child(2) { top: 28%; width: 38vw; height: 14vh; animation-duration: 190s; animation-delay: -120s; opacity: .8; }
-.sky-clouds i:nth-child(3) { top: 52%; width: 56vw; height: 20vh; animation-duration: 230s; animation-delay: -80s; opacity: .7; }
-.sky-clouds i:nth-child(4) { top: 74%; width: 42vw; height: 16vh; animation-duration: 170s; animation-delay: -10s; opacity: .6; }
+.cloud path {
+  fill: url(#cloud-fill);
+  stroke: var(--cloud-line);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 3s var(--ease);
+}
+.cloud:nth-child(1) { top: 5%;  width: 30vw; animation-duration: 170s; animation-delay: -40s; }
+.cloud:nth-child(2) { top: 19%; width: 20vw; animation-duration: 220s; animation-delay: -150s; }
+.cloud:nth-child(3) { top: 33%; width: 36vw; animation-duration: 260s; animation-delay: -95s; }
+.cloud:nth-child(4) { top: 47%; width: 24vw; animation-duration: 200s; animation-delay: -15s; }
+.cloud:nth-child(5) { top: 12%; width: 16vw; animation-duration: 240s; animation-delay: -200s; opacity: .7; }
 @keyframes drift {
-  from { transform: translateX(-60vw); }
+  from { transform: translateX(-45vw); }
   to   { transform: translateX(110vw); }
 }
+/* Quantidade e peso das nuvens conforme o tempo */
 body.wx-clear .sky-clouds  { opacity: .22; }
-body.wx-partly .sky-clouds { opacity: .55; }
-body.wx-cloudy .sky-clouds { opacity: .95; }
-body.wx-fog .sky-clouds    { opacity: 1; --cloud: rgba(225, 230, 240, .5); }
-body.wx-rain .sky-clouds, body.wx-storm .sky-clouds { opacity: 1; --cloud: rgba(165, 180, 205, .42); }
-body.wx-snow .sky-clouds   { opacity: .9; --cloud: rgba(235, 240, 250, .5); }
+body.wx-clear .cloud:nth-child(n+2) { display: none; }
+body.wx-partly .sky-clouds { opacity: .7; }
+body.wx-partly .cloud:nth-child(4), body.wx-partly .cloud:nth-child(5) { display: none; }
+body.wx-cloudy .sky-clouds { opacity: .95; --cloud-top: rgba(255, 255, 255, .14); --cloud-bottom: rgba(26, 6, 56, .72); }
+body.wx-fog .sky-clouds    { opacity: .9;  --cloud-top: rgba(235, 225, 255, .28); --cloud-bottom: rgba(120, 100, 160, .45); --cloud-line: rgba(235, 225, 255, .35); }
+body.wx-rain .sky-clouds, body.wx-storm .sky-clouds { opacity: 1; --cloud-top: rgba(200, 190, 255, .12); --cloud-bottom: rgba(16, 4, 40, .8); --cloud-line: rgba(46, 242, 255, .45); }
+body.wx-snow .sky-clouds   { opacity: .9;  --cloud-top: rgba(255, 255, 255, .3); --cloud-bottom: rgba(90, 80, 140, .5); }
+body.scene-night .sky-clouds { --cloud-top: rgba(200, 180, 255, .12); }
 
 /* Atmosfera do tempo: chuva esfria e escurece, névoa clareia e apaga */
 .sky-weather {
@@ -1239,7 +1287,7 @@ body.no-tips .tip, .tip.is-empty { display: none; }
 /* Modo TV (index.html?tv=1): margem de segurança contra overscan e efeitos mais leves */
 body.tv .page { padding: 3.2vh 3.2vw; }
 body.tv { --blur: 8px; }
-body.tv .sky-clouds i { filter: blur(24px); }
+body.tv .cloud { filter: none; }
 body.tv .sky-rain i:nth-child(2) { display: none; }
 body.tv .sky-sun { animation: none; }
 body.tv .sky-scan { display: none; }
@@ -1254,13 +1302,14 @@ body.tv .tip { margin-top: .7rem; }
 
 /* Movimento reduzido: o céu continua mudando de cor, mas parado */
 @media (prefers-reduced-motion: reduce) {
-  .sky-sun, .sky-clouds i, .sky-rain i, .sky-stars i, .pin i, .sky-horizon i,
+  .sky-sun, .cloud, .sky-rain i, .sky-stars i, .pin i, .sky-horizon i,
   .w-sun, .w-drop, .w-flake, .w-bolt, .w-fog, .w-star, .wicon--hero .w-cloud {
     animation: none !important;
   }
-  .sky-clouds i:nth-child(1) { transform: translateX(-10vw); }
-  .sky-clouds i:nth-child(2) { transform: translateX(30vw); }
-  .sky-clouds i:nth-child(3) { transform: translateX(5vw); }
-  .sky-clouds i:nth-child(4) { transform: translateX(40vw); }
+  .cloud:nth-child(1) { transform: translateX(-4vw); }
+  .cloud:nth-child(2) { transform: translateX(34vw); }
+  .cloud:nth-child(3) { transform: translateX(8vw); }
+  .cloud:nth-child(4) { transform: translateX(44vw); }
+  .cloud:nth-child(5) { transform: translateX(62vw); }
   .news-lead, .segmented button, .play { transition: none; }
 }

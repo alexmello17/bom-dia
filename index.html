@@ -19,7 +19,14 @@
     <div class="sky-sun"></div>
     <div class="sky-moon" id="sky-moon"></div>
     <p class="sky-moon-label" id="sky-moon-label"></p>
-    <div class="sky-clouds"><i></i><i></i><i></i><i></i></div>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <linearGradient id="cloud-fill" x1="0" y1="0" x2="0" y2="1">
+          <stop class="cloud-stop-top" offset="0"/><stop class="cloud-stop-bottom" offset="1"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="sky-clouds"><svg class="cloud" viewBox="0 0 200 80" aria-hidden="true"><path d="M22 74 C6 74 0 62 4 50 C8 38 20 34 30 38 C30 20 46 8 62 12 C72 -2 96 -2 106 10 C120 2 140 6 146 20 C164 16 180 28 178 44 C194 46 200 64 186 72 C176 78 160 76 150 74 Z"/></svg><svg class="cloud" viewBox="0 0 200 80" aria-hidden="true"><path d="M22 74 C6 74 0 62 4 50 C8 38 20 34 30 38 C30 20 46 8 62 12 C72 -2 96 -2 106 10 C120 2 140 6 146 20 C164 16 180 28 178 44 C194 46 200 64 186 72 C176 78 160 76 150 74 Z"/></svg><svg class="cloud" viewBox="0 0 200 80" aria-hidden="true"><path d="M22 74 C6 74 0 62 4 50 C8 38 20 34 30 38 C30 20 46 8 62 12 C72 -2 96 -2 106 10 C120 2 140 6 146 20 C164 16 180 28 178 44 C194 46 200 64 186 72 C176 78 160 76 150 74 Z"/></svg><svg class="cloud" viewBox="0 0 200 80" aria-hidden="true"><path d="M22 74 C6 74 0 62 4 50 C8 38 20 34 30 38 C30 20 46 8 62 12 C72 -2 96 -2 106 10 C120 2 140 6 146 20 C164 16 180 28 178 44 C194 46 200 64 186 72 C176 78 160 76 150 74 Z"/></svg><svg class="cloud" viewBox="0 0 200 80" aria-hidden="true"><path d="M22 74 C6 74 0 62 4 50 C8 38 20 34 30 38 C30 20 46 8 62 12 C72 -2 96 -2 106 10 C120 2 140 6 146 20 C164 16 180 28 178 44 C194 46 200 64 186 72 C176 78 160 76 150 74 Z"/></svg></div>
     <div class="sky-weather"></div>
     <div class="sky-rain"><i></i><i></i></div>
     <div class="sky-vignette"></div>
