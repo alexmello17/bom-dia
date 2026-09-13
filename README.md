@@ -81,6 +81,9 @@ index.html?cena=manha&tempo=chuva
 
 `cena`: `amanhecer`, `manha`, `tarde`, `por-do-sol`, `noite`
 `tempo`: `limpo`, `parcial`, `nublado`, `nevoa`, `chuva`, `tempestade`, `neve`
+`lua`: uma data (`lua=2026-09-26`) para ver a lua naquela fase
+
+À noite a lua aparece com a **fase real**, calculada localmente (sem API) e desenhada como se vê do hemisfério sul — a crescente iluminada pela esquerda. O nome da fase e a porcentagem iluminada ficam logo abaixo dela.
 
 ### Na TV (Google TV / Android TV)
 

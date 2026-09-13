@@ -230,20 +230,36 @@ body.wx-cloudy .sky-sun { opacity: calc(var(--sun-o, 0) * .5); }
 
 .sky-moon {
   position: absolute;
-  left: 86%;
-  top: 11%;
+  left: 40%;
+  top: 13%;
   width: 8.5vmin;
   height: 8.5vmin;
   border-radius: 50%;
   opacity: 0;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle at 36% 34%, #fff6ff 0%, #d9c8ff 55%, #9b7fe0 100%);
+  /* o halo acompanha a fração iluminada (--moon-k, definido pelo JS) */
   box-shadow:
-    0 0 40px 14px rgba(200, 160, 255, .22),
-    0 0 130px 60px rgba(170, 100, 255, .10);
+    0 0 40px 14px rgba(200, 160, 255, calc(.06 + .18 * var(--moon-k, 1))),
+    0 0 130px 60px rgba(170, 100, 255, calc(.03 + .08 * var(--moon-k, 1)));
   transition: opacity 3s var(--ease);
 }
+.sky-moon svg { display: block; width: 100%; height: 100%; overflow: visible; }
 body.scene-night .sky-moon { opacity: .96; }
+.sky-moon-label {
+  position: absolute;
+  left: 40%;
+  top: calc(13% + 5.6vmin);
+  transform: translateX(-50%);
+  font-size: .72rem;
+  letter-spacing: .02em;
+  color: rgba(220, 205, 255, .6);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 3s var(--ease);
+}
+body.scene-night .sky-moon-label { opacity: 1; }
+body.scene-night.wx-cloudy .sky-moon-label, body.scene-night.wx-rain .sky-moon-label,
+body.scene-night.wx-storm .sky-moon-label, body.scene-night.wx-fog .sky-moon-label { opacity: .4; }
 body.scene-night.wx-cloudy .sky-moon, body.scene-night.wx-rain .sky-moon,
 body.scene-night.wx-storm .sky-moon, body.scene-night.wx-fog .sky-moon { opacity: .3; }
 
