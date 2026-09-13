@@ -84,13 +84,18 @@ index.html?cena=manha&tempo=chuva
 
 ### Na TV (Google TV / Android TV)
 
-Publique a pasta em uma hospedagem estática (ex.: [Netlify Drop](https://app.netlify.com/drop)) ou sirva do PC (`python -m http.server 8765 --bind 0.0.0.0`) e abra o endereço no navegador da TV com `?tv=1`:
+A página está publicada no GitHub Pages: **https://alexmello17.github.io/bom-dia/**
 
-```text
-https://seu-endereco.netlify.app/?tv=1
-```
+No navegador da TV abra com `?tv=1` (margem de segurança contra overscan e efeitos mais leves; também pode ser fixado com `modoTV: true`). Em qualquer tela na horizontal a página se ajusta à altura da janela, sem rolagem.
 
-O modo TV adiciona margem de segurança nas bordas (overscan) e deixa os efeitos mais leves. Também pode ser fixado com `modoTV: true` em `config.js`. Em qualquer tela na horizontal a página se ajusta à altura da janela, sem rolagem.
+Para publicar uma alteração: `git add -A && git commit -m "..." && git push` — o site atualiza em cerca de um minuto.
+
+### Dados pessoais fora do repositório
+
+O repositório é público, então a posição em Bitcoin não fica no código:
+
+- **PC**: `js/config.local.js` (ignorado pelo Git) com `CONFIG.cotacoesOpcoes.aportes = [...]`.
+- **TV/celular**: abra uma vez `…/bom-dia/?tv=1&btc=0.01&investido=5000` — fica salvo só naquele navegador e some da barra de endereço. `?btc=limpar` apaga.
 
 ## Fontes de dados
 
