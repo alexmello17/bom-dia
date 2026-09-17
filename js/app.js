@@ -23,6 +23,7 @@ const App = (() => {
 
     Status.init();
     Sky.init();
+    Lights.init();
     Clock.init();
 
     if (CONFIG.clima) Weather.init();

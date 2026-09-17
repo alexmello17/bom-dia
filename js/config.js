@@ -65,6 +65,10 @@ const CONFIG = {
     ]
   },
 
+  // Luzes: "auto" (céu pela hora), "cor", "arco-iris", "onda" ou "respiracao".
+  // Também pelo botão no canto da tela, pela tecla L ou por ?luz=arco-iris. A escolha fica salva no navegador.
+  luzes: { modo: "auto", matiz: 285, velocidade: 40 },
+
   radio: true,
   radioOpcoes: {
     volume: 0.8,

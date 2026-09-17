@@ -67,6 +67,10 @@ aportes: [
 - `exibir: "percentual"` esconde os valores em R$ e mostra só a variação — útil se a página for publicada em um endereço público.
 - A lista vazia mostra apenas a cotação.
 
+### Luzes (cores do fundo)
+
+Botão redondo no canto inferior esquerdo (ou tecla `L`) abre o painel de luzes, no estilo de iluminação RGB de teclado: **Automático** (céu pela hora e pelo tempo), **Cor fixa** (seletor de matiz e amostras rápidas), **Arco-íris** (percorre todas as cores), **Onda** (faixas deslizando) e **Respiração** (cor pulsando). A cor tinge o céu e a grade do horizonte; sol, lua e nuvens continuam naturais. `,` e `.` mudam a cor pelo teclado; a velocidade dos efeitos é ajustável. A escolha fica salva no navegador; padrão em `CONFIG.luzes`, e `?luz=arco-iris` força um modo.
+
 ### Rádio
 
 Um rádio automotivo anos 80 abaixo das notícias, com estações de flashback e clássicos ao vivo: Antena 1, Alpha FM, Nova Brasil, Rádio Cidade, Kiss FM, 89 FM e duas webrádios de flashback. Knob **VOL·PWR**: clique liga/desliga, roda do mouse ou arrasto ajusta o volume; knob **TUNE** e botões **SEEK** trocam de estação; **presets 1–8** vão direto a uma estação. No teclado ou controle: `P` toca/pausa, `[` `]` trocam, `+` `-` volume (teclas de mídia também funcionam). A última estação e o volume ficam salvos. Os navegadores só permitem começar a tocar depois de um clique/toque; `radioOpcoes.tocarAoAbrir: true` tenta mesmo assim. As estações ficam em `radioOpcoes.estacoes` (use streams HTTPS).
@@ -144,7 +148,8 @@ js/
   news.js           getNews() e carrossel
   quotes.js         getBitcoin(), posição em BTC
   tips.js           getTip() — dica do dia (lista em tips-data.js)
-  radio.js          player de rádio ao vivo
+  radio.js          player de rádio ao vivo (CD player)
+  lights.js         luzes: cor do fundo e efeitos
   app.js            inicialização e agendamento
 ```
 
