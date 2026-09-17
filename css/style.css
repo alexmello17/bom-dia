@@ -114,11 +114,11 @@ body:not(.ready) #sky * { transition: none !important; }
 
 /* Posição e presença do sol por cena (variáveis lidas no body) */
 body { --horizon: 68%; } /* altura da linha do horizonte */
-body.scene-dawn      { --sun-x: 44%; --sun-y: var(--horizon); --sun-o: 1; --sun-size: 40vmin; --sun-clip: 50%; --cloud: rgba(255, 170, 220, .26); --grid: 255, 90, 200;  --grid-o: .38; }
-body.scene-morning   { --sun-x: 44%; --sun-y: 12%;  --sun-o: .95; --sun-size: 30vmin; --cloud: rgba(200, 235, 255, .30); --grid: 46, 242, 255;  --grid-o: .28; }
-body.scene-afternoon { --sun-x: 44%; --sun-y: 2%;   --sun-o: .95; --sun-size: 32vmin; --cloud: rgba(255, 210, 240, .30); --grid: 255, 120, 220; --grid-o: .32; }
-body.scene-sunset    { --sun-x: 44%; --sun-y: var(--horizon); --sun-o: 1; --sun-size: 44vmin; --sun-clip: 50%; --cloud: rgba(255, 160, 210, .26); --grid: 255, 43, 214;  --grid-o: .4; }
-body.scene-night     { --sun-x: 44%; --sun-y: 130%; --sun-o: 0;   --sun-size: 36vmin; --cloud: rgba(140, 110, 200, .24); --grid: 170, 60, 255;  --grid-o: .38; }
+body.scene-dawn      { --sun-x: 50%; --sun-y: var(--horizon); --sun-o: 1; --sun-size: 40vmin; --sun-clip: 50%; --cloud: rgba(255, 170, 220, .26); --grid: 255, 90, 200;  --grid-o: .38; }
+body.scene-morning   { --sun-x: 50%; --sun-y: 12%;  --sun-o: .95; --sun-size: 30vmin; --cloud: rgba(200, 235, 255, .30); --grid: 46, 242, 255;  --grid-o: .28; }
+body.scene-afternoon { --sun-x: 50%; --sun-y: 2%;   --sun-o: .95; --sun-size: 32vmin; --cloud: rgba(255, 210, 240, .30); --grid: 255, 120, 220; --grid-o: .32; }
+body.scene-sunset    { --sun-x: 50%; --sun-y: var(--horizon); --sun-o: 1; --sun-size: 44vmin; --sun-clip: 50%; --cloud: rgba(255, 160, 210, .26); --grid: 255, 43, 214;  --grid-o: .4; }
+body.scene-night     { --sun-x: 50%; --sun-y: 130%; --sun-o: 0;   --sun-size: 36vmin; --cloud: rgba(140, 110, 200, .24); --grid: 170, 60, 255;  --grid-o: .38; }
 
 .sky-sun {
   position: absolute;
