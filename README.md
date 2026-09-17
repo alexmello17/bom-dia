@@ -91,7 +91,7 @@ A página está publicada no GitHub Pages: **https://alexmello17.github.io/bom-d
 
 No navegador da TV abra com `?tv=1` (margem de segurança contra overscan e efeitos mais leves; também pode ser fixado com `modoTV: true`). Em qualquer tela na horizontal a página se ajusta à altura da janela, sem rolagem.
 
-Para publicar uma alteração: `git add -A && git commit -m "..." && git push` — o site atualiza em cerca de um minuto.
+Para publicar uma alteração: `python bump.py` (renova o número de versão dos arquivos, para o navegador da TV não ficar com CSS/JS antigos em cache), depois `git add -A && git commit -m "..." && git push` — o site atualiza em cerca de um minuto.
 
 ### Dados pessoais fora do repositório
 
