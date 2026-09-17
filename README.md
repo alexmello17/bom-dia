@@ -69,7 +69,7 @@ aportes: [
 
 ### Rádio
 
-Player abaixo das notícias com estações de flashback e clássicos ao vivo: Antena 1, Alpha FM, Nova Brasil, Rádio Cidade, Kiss FM, 89 FM e duas webrádios de flashback. Botão ▶ toca/pausa, ‹ › trocam de estação; no teclado ou controle, `P`, `[` e `]` (teclas de mídia também funcionam). A última estação e o volume ficam salvos. Os navegadores só permitem começar a tocar depois de um clique/toque; `radioOpcoes.tocarAoAbrir: true` tenta mesmo assim. As estações ficam em `radioOpcoes.estacoes` (use streams HTTPS).
+Um rádio automotivo anos 80 abaixo das notícias, com estações de flashback e clássicos ao vivo: Antena 1, Alpha FM, Nova Brasil, Rádio Cidade, Kiss FM, 89 FM e duas webrádios de flashback. Knob **VOL·PWR**: clique liga/desliga, roda do mouse ou arrasto ajusta o volume; knob **TUNE** e botões **SEEK** trocam de estação; **presets 1–8** vão direto a uma estação. No teclado ou controle: `P` toca/pausa, `[` `]` trocam, `+` `-` volume (teclas de mídia também funcionam). A última estação e o volume ficam salvos. Os navegadores só permitem começar a tocar depois de um clique/toque; `radioOpcoes.tocarAoAbrir: true` tenta mesmo assim. As estações ficam em `radioOpcoes.estacoes` (use streams HTTPS).
 
 ### Dica de filme ou série
 

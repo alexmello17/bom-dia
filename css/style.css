@@ -774,9 +774,6 @@ body.no-tips .tip, .tip.is-empty { display: none; }
   .tip-meta { display: inline-flex; margin-left: .5rem; }
   .tip-synopsis { margin-top: .05rem; font-size: .82rem; -webkit-line-clamp: 1; }
   .weather-sub .section-status, .quotes .section-status { display: none; }
-  .radio { padding: .45rem .8rem .45rem .55rem; gap: .7rem; }
-  .radio-play { width: 2.4rem; height: 2.4rem; }
-  .radio-desc { display: none; }
 }
 /* Em telas muito baixas a dica sai para o resto caber sem rolagem */
 @media (min-width: 900px) and (orientation: landscape) and (max-height: 480px) {
@@ -1235,95 +1232,255 @@ body.no-tips .tip, .tip.is-empty { display: none; }
 @keyframes dot-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 /* =========================================================
-   RÁDIO — player compacto abaixo das notícias
+   RÁDIO — head unit automotivo anos 80
    ========================================================= */
 
 body.no-radio .radio { display: none; }
 body.no-radio .side { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
 
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
 .radio {
-  flex-direction: row;
+  --amber: #ffb648;
+  --amber-dim: rgba(255, 182, 72, .28);
+  --amber-glow: 0 0 6px rgba(255, 170, 60, .85), 0 0 18px rgba(255, 140, 30, .35);
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
   align-items: center;
   gap: 1rem;
-  padding: .7rem 1.1rem .7rem .8rem;
-  border-radius: 22px;
+  height: 6.4rem;
+  padding: .55rem 1.1rem .55rem 1rem;
+  border-radius: 12px;
+  /* faceplate: plástico escuro com escovado e bisel */
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #33343b 0%, #1d1e23 18%, #141518 60%, #0f1013 100%);
+  border: 1px solid #08090b;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .14),
+    inset 0 -1px 0 rgba(0, 0, 0, .8),
+    inset 0 0 0 1px rgba(255, 255, 255, .03),
+    0 18px 40px -22px rgba(0, 0, 0, .9),
+    0 0 40px -20px rgba(255, 150, 60, .25);
+  font-family: var(--font);
 }
-.radio-play {
-  flex: 0 0 auto;
-  width: 3rem;
-  height: 3rem;
+.radio-brand {
+  position: absolute;
+  left: 1.1rem;
+  top: .28rem;
+  display: flex;
+  gap: .6rem;
+  align-items: baseline;
+  font-size: .55rem;
+  letter-spacing: .22em;
+  color: rgba(255, 255, 255, .38);
+  pointer-events: none;
+}
+.radio-brand b { font-family: var(--font-display); font-weight: 700; color: rgba(255, 255, 255, .55); }
+.slot {
+  /* fenda do toca-fitas */
+  position: absolute;
+  left: 32%; right: 32%;
+  bottom: .32rem;
+  height: 3px;
+  border-radius: 2px;
+  background: #050506;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 1), 0 1px 0 rgba(255, 255, 255, .07);
+}
+
+/* ---- knobs ---- */
+.knob {
+  --angle: 0deg;
+  position: relative;
+  width: 3.9rem;
+  height: 3.9rem;
+  padding: 0;
+  border: 0;
   border-radius: 50%;
-  border: 1px solid rgba(46, 242, 255, .35);
-  background: rgba(46, 242, 255, .12);
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  transition: background .25s, box-shadow .25s;
-}
-.radio-play:hover { background: rgba(46, 242, 255, .2); }
-.radio[data-state="playing"] .radio-play { box-shadow: 0 0 18px rgba(46, 242, 255, .45); }
-
-/* ícone: barras de equalizador; paradas formam o "play" */
-.radio-eq { display: flex; align-items: flex-end; gap: 3px; height: 1.1rem; }
-.radio-eq i { width: 3px; height: 30%; background: var(--neon-cyan); border-radius: 2px; box-shadow: 0 0 6px rgba(46, 242, 255, .7); }
-.radio[data-state="playing"] .radio-eq i { animation: eq .9s ease-in-out infinite; }
-.radio[data-state="playing"] .radio-eq i:nth-child(2) { animation-delay: -.3s; }
-.radio[data-state="playing"] .radio-eq i:nth-child(3) { animation-delay: -.6s; }
-.radio[data-state="playing"] .radio-eq i:nth-child(4) { animation-delay: -.15s; }
-.radio[data-state="loading"] .radio-eq i { animation: eq 1.6s ease-in-out infinite; opacity: .6; }
-.radio:not([data-state="playing"]):not([data-state="loading"]) .radio-eq {
-  /* triângulo de play quando parada */
-  width: 0; height: 0; gap: 0;
-  border-left: .8rem solid var(--neon-cyan);
-  border-top: .5rem solid transparent;
-  border-bottom: .5rem solid transparent;
-  margin-left: 3px;
-  filter: drop-shadow(0 0 6px rgba(46, 242, 255, .7));
-}
-.radio:not([data-state="playing"]):not([data-state="loading"]) .radio-eq i { display: none; }
-@keyframes eq { 0%, 100% { height: 30%; } 50% { height: 100%; } }
-
-.radio-info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: .1rem; }
-.radio-line { display: flex; align-items: baseline; gap: .8rem; min-width: 0; }
-.radio-line b { font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
-.radio-status { font-size: .78rem; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.radio[data-state="playing"] .radio-status { color: var(--neon-cyan); }
-.radio[data-state="error"] .radio-status { color: #ff9ab8; }
-.radio-desc { font-size: .82rem; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-.radio-controls { flex: 0 0 auto; display: flex; align-items: center; gap: .4rem; }
-.radio-skip {
-  width: 2.1rem; height: 2.1rem;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, .14);
-  background: rgba(255, 255, 255, .08);
-  color: var(--ink);
-  font-size: 1.4rem;
-  line-height: 1;
-  padding: 0 0 .15rem;
-  cursor: pointer;
-  transition: background .25s;
-}
-.radio-skip:hover { background: rgba(255, 255, 255, .16); }
-.radio-volume { display: flex; align-items: center; margin-left: .5rem; }
-.radio-volume input {
-  width: 5.5rem;
-  height: 1.2rem;
-  margin: 0;
   background: transparent;
-  -webkit-appearance: none;
-  appearance: none;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.knob:active { cursor: grabbing; }
+/* anel serrilhado no elemento do knob; a face côncava (opaca) fica por cima */
+.knob {
+  background: repeating-conic-gradient(from 0deg, #3d3e45 0deg 5deg, #101114 5deg 10deg);
+  box-shadow: 0 0 0 1px #050506, 0 3px 6px rgba(0, 0, 0, .7);
+}
+.knob-face {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #4a4b52 0%, #2b2c31 45%, #1a1b1f 72%, #0b0c0e 100%);
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, .22),
+    inset 0 -3px 5px rgba(0, 0, 0, .8),
+    0 0 0 1px #050506;
+  transform: rotate(var(--angle));
+  transition: transform .25s var(--ease);
+}
+.knob-mark {
+  position: absolute;
+  left: 50%;
+  top: 9%;
+  width: 3px;
+  height: 22%;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--amber);
+  box-shadow: var(--amber-glow);
+}
+.knob-label {
+  position: absolute;
+  left: 50%;
+  bottom: -.95rem;
+  transform: translateX(-50%);
+  font-size: .5rem;
+  letter-spacing: .18em;
+  color: rgba(255, 255, 255, .4);
+  white-space: nowrap;
+}
+.knob:focus-visible { outline: 2px solid var(--amber); outline-offset: 4px; }
+.knob--vol .knob-face::after {
+  /* LED de power */
+  content: "";
+  position: absolute;
+  left: 50%; bottom: -1.05rem;
+  width: 5px; height: 5px;
+  margin-left: 1.6rem;
+  border-radius: 50%;
+  background: #3a1b08;
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, .8);
+  transform: rotate(calc(-1 * var(--angle)));
+}
+.radio[data-state="playing"] .knob--vol .knob-face::after,
+.radio[data-state="loading"] .knob--vol .knob-face::after { background: #ff5a1f; box-shadow: 0 0 8px #ff6a2a, 0 0 16px rgba(255, 90, 30, .6); }
+
+/* ---- display VFD ---- */
+.vfd {
+  position: relative;
+  height: 4.2rem;
+  padding: .55rem .9rem .5rem;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(180deg, rgba(0, 0, 0, .18) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #1a1208 0%, #0d0904 55%, #120c05 100%);
+  border: 1px solid #000;
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, .95),
+    inset 0 0 30px rgba(255, 150, 50, .06),
+    0 1px 0 rgba(255, 255, 255, .06);
+  color: var(--amber);
+  text-shadow: var(--amber-glow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.vfd::after {
+  /* reflexo do vidro */
+  content: "";
+  position: absolute;
+  inset: 0 0 55% 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+.vfd-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; min-width: 0; }
+.vfd-name {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vfd-flags { display: flex; gap: .45rem; flex: 0 0 auto; }
+.vfd-flag {
+  font-style: normal;
+  font-size: .55rem;
+  letter-spacing: .14em;
+  padding: .12rem .3rem;
+  border: 1px solid var(--amber-dim);
+  border-radius: 3px;
+  color: var(--amber-dim);
+  text-shadow: none;
+  transition: color .3s, border-color .3s, text-shadow .3s;
+}
+.radio[data-state="playing"] .vfd-flag { color: var(--amber); border-color: var(--amber); text-shadow: var(--amber-glow); }
+.vfd-row--sub { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: rgba(255, 190, 110, .85); }
+.vfd-desc { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.radio.is-flashing .vfd-desc { visibility: hidden; position: relative; }
+.radio.is-flashing .vfd-desc::after {
+  content: attr(data-flash);
+  visibility: visible;
+  position: absolute;
+  left: 0; top: 0;
+  color: var(--amber);
+  text-shadow: var(--amber-glow);
+}
+.vfd-status { flex: 0 0 auto; white-space: nowrap; }
+.radio[data-state="error"] .vfd-status { color: #ff7a5a; text-shadow: 0 0 8px rgba(255, 90, 50, .8); }
+.radio[data-state="loading"] .vfd-status { animation: vfd-blink 1s steps(2) infinite; }
+@keyframes vfd-blink { to { opacity: .35; } }
+
+/* medidor de nível: barras que só se mexem tocando */
+.vfd-eq { display: flex; align-items: flex-end; gap: 2px; height: .8rem; flex: 0 0 auto; margin-left: .4rem; }
+.vfd-eq i { width: 4px; height: 20%; background: var(--amber-dim); border-radius: 1px; }
+.radio[data-state="playing"] .vfd-eq i { background: var(--amber); box-shadow: var(--amber-glow); animation: eq 1s ease-in-out infinite; }
+.radio[data-state="playing"] .vfd-eq i:nth-child(2) { animation-delay: -.2s; }
+.radio[data-state="playing"] .vfd-eq i:nth-child(3) { animation-delay: -.5s; }
+.radio[data-state="playing"] .vfd-eq i:nth-child(4) { animation-delay: -.1s; }
+.radio[data-state="playing"] .vfd-eq i:nth-child(5) { animation-delay: -.7s; }
+.radio[data-state="playing"] .vfd-eq i:nth-child(6) { animation-delay: -.3s; }
+.radio[data-state="playing"] .vfd-eq i:nth-child(7) { animation-delay: -.6s; }
+.radio[data-state="playing"] .vfd-eq i:nth-child(8) { animation-delay: -.4s; }
+@keyframes eq { 0%, 100% { height: 20%; } 50% { height: 100%; } }
+.vfd-led {
+  position: absolute;
+  right: .55rem; top: .5rem;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--amber-dim);
+}
+.radio[data-state="playing"] .vfd-led { background: var(--amber); box-shadow: var(--amber-glow); }
+
+/* ---- presets e seek ---- */
+.presets { display: grid; grid-template-columns: repeat(4, auto); gap: .3rem .35rem; }
+.preset, .seek-btn {
+  font-family: var(--font-display);
+  font-size: .62rem;
+  letter-spacing: .06em;
+  color: rgba(255, 255, 255, .7);
+  background: linear-gradient(180deg, #2c2d33, #17181c 60%, #101114);
+  border: 1px solid #060708;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), inset 0 -1px 0 rgba(0, 0, 0, .8), 0 1px 2px rgba(0, 0, 0, .7);
   cursor: pointer;
+  transition: transform .08s, box-shadow .08s, color .2s;
 }
-.radio-volume input::-webkit-slider-runnable-track { height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .25); }
-.radio-volume input::-webkit-slider-thumb {
-  -webkit-appearance: none; appearance: none;
-  width: 11px; height: 11px; margin-top: -4px;
-  border-radius: 50%; background: #fff;
-  box-shadow: 0 0 8px rgba(46, 242, 255, .7);
+.preset { width: 1.75rem; height: 1.35rem; padding: 0; }
+.preset:active, .seek-btn:active { transform: translateY(1px); box-shadow: inset 0 1px 3px rgba(0, 0, 0, .9); }
+.preset[aria-pressed="true"] { color: var(--amber); text-shadow: var(--amber-glow); border-color: rgba(255, 170, 60, .5); }
+.seek { display: flex; flex-direction: column; gap: .35rem; }
+.seek-btn { padding: .3rem .55rem; white-space: nowrap; }
+
+/* ---- telas menores ---- */
+@media (max-width: 1400px) { .presets { grid-template-columns: repeat(2, auto); } .seek-btn { font-size: .55rem; padding: .28rem .45rem; } }
+/* telas baixas (TV): sem presets nem rótulos, só display, seek e knobs */
+@media (min-width: 900px) and (orientation: landscape) and (max-height: 620px) {
+  .radio { height: 4.6rem; gap: .7rem; padding: .4rem .8rem; grid-template-columns: auto minmax(0, 1fr) auto auto; }
+  .knob { width: 2.7rem; height: 2.7rem; }
+  .knob-label, .radio-brand { display: none; }
+  .knob--vol .knob-face::after { display: none; }
+  .presets { display: none; }
+  .vfd { height: 3.2rem; padding: .35rem .6rem; }
+  .vfd-name { font-size: 1rem; }
+  .vfd-desc { display: none; }
 }
-.radio-volume input::-moz-range-track { height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .25); }
-.radio-volume input::-moz-range-thumb { width: 11px; height: 11px; border: 0; border-radius: 50%; background: #fff; }
 
 /* =========================================================
    ÍCONES METEOROLÓGICOS — animações
@@ -1360,7 +1517,10 @@ body.no-radio .side { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
   .hero { padding: .2rem 0 .4rem; }
   .weather { margin: 1.8rem 0 1rem; padding: 0; }
   .side { grid-template-rows: none; }
-  .radio-desc { display: none; }
+  .radio { height: auto; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto auto; row-gap: .8rem; padding-bottom: 1.4rem; }
+  .presets { grid-column: 1 / -1; grid-template-columns: repeat(8, auto); justify-content: center; }
+  .seek { grid-column: 1 / -1; flex-direction: row; justify-content: center; }
+  .knob--tune { display: none; }
   .radar-map-wrap { min-height: 22rem; }
   .news-items { grid-auto-rows: auto; overflow: visible; }
   .news-items li a { padding: .7rem .4rem .7rem 0; }
@@ -1408,7 +1568,7 @@ body.tv .radar-approach { margin-top: .4rem; }
 body.tv .radar-stats { margin-top: .55rem; padding-top: .55rem; }
 body.tv .quotes { margin-top: .9rem; }
 body.tv .tip { margin-top: .7rem; }
-body.tv .radio-volume { display: none; } /* na TV o volume é do controle remoto */
+body.tv .knob--vol .knob-label { display: none; }
 
 /* Movimento reduzido: o céu continua mudando de cor, mas parado */
 @media (prefers-reduced-motion: reduce) {

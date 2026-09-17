@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <title>Bom dia</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/style.css?v=202609171446">
+  <link rel="stylesheet" href="css/style.css?v=202609171505">
 </head>
 <body class="scene-night wx-clear">
 
@@ -151,40 +151,60 @@
         <nav id="news-dots" class="news-dots" aria-label="Páginas de notícias"></nav>
       </section>
 
-      <section id="radio" class="panel radio" data-state="idle" aria-label="Rádio">
-        <button id="radio-play" type="button" class="radio-play" aria-label="Tocar ou pausar (P)">
-          <span class="radio-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <section id="radio" class="radio" data-state="idle" aria-label="Rádio">
+        <div class="radio-brand"><b>BOM DIA</b><span>FM STEREO</span></div>
+
+        <button id="radio-play" type="button" class="knob knob--vol" aria-label="Volume: gire ou arraste; clique liga e desliga (P)" title="Clique: liga/desliga · Roda ou arrastar: volume">
+          <span class="knob-face"><i class="knob-mark"></i></span>
+          <span class="knob-label">VOL · PWR</span>
         </button>
-        <div class="radio-info">
-          <span class="radio-line"><b id="radio-name">—</b><span id="radio-status" class="radio-status">Pronta para tocar</span></span>
-          <span id="radio-desc" class="radio-desc"></span>
+
+        <div class="vfd">
+          <div class="vfd-row">
+            <span id="radio-name" class="vfd-name">—</span>
+            <span class="vfd-flags"><i class="vfd-flag vfd-flag--st">ST</i><i class="vfd-flag vfd-flag--live">LIVE</i></span>
+          </div>
+          <div class="vfd-row vfd-row--sub">
+            <span id="radio-desc" class="vfd-desc"></span>
+            <span id="radio-status" class="vfd-status">Pronta para tocar</span>
+            <span class="vfd-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+          </div>
+          <span class="vfd-led" aria-hidden="true"></span>
         </div>
-        <div class="radio-controls">
-          <button id="radio-prev" type="button" class="radio-skip" aria-label="Estação anterior ([)">‹</button>
-          <button id="radio-next" type="button" class="radio-skip" aria-label="Próxima estação (])">›</button>
-          <label class="radio-volume" aria-label="Volume">
-            <input id="radio-volume" type="range" min="0" max="100" value="80">
-          </label>
+
+        <div class="presets" id="radio-presets" role="group" aria-label="Estações"></div>
+
+        <div class="seek">
+          <button id="radio-prev" type="button" class="seek-btn" aria-label="Estação anterior ([)">◂ SEEK</button>
+          <button id="radio-next" type="button" class="seek-btn" aria-label="Próxima estação (])">SEEK ▸</button>
         </div>
+
+        <button id="radio-tune" type="button" class="knob knob--tune" aria-label="Sintonia: gire ou clique para a próxima estação" title="Clique: próxima estação · Roda: troca de estação">
+          <span class="knob-face"><i class="knob-mark"></i></span>
+          <span class="knob-label">TUNE</span>
+        </button>
+
+        <input id="radio-volume" type="range" min="0" max="100" value="80" class="sr-only" aria-label="Volume" tabindex="-1">
+        <div class="slot" aria-hidden="true"></div>
       </section>
 
     </aside>
   </main>
 
-  <script src="js/config.js?v=202609171446"></script>
+  <script src="js/config.js?v=202609171505"></script>
   <script src="js/config.local.js" onerror="this.remove()"></script>
-  <script src="js/utils.js?v=202609171446"></script>
-  <script src="js/status.js?v=202609171446"></script>
-  <script src="js/icons.js?v=202609171446"></script>
-  <script src="js/sky.js?v=202609171446"></script>
-  <script src="js/clock.js?v=202609171446"></script>
-  <script src="js/weather.js?v=202609171446"></script>
-  <script src="js/radar.js?v=202609171446"></script>
-  <script src="js/news.js?v=202609171446"></script>
-  <script src="js/quotes.js?v=202609171446"></script>
-  <script src="js/tips-data.js?v=202609171446"></script>
-  <script src="js/radio.js?v=202609171446"></script>
-  <script src="js/tips.js?v=202609171446"></script>
-  <script src="js/app.js?v=202609171446"></script>
+  <script src="js/utils.js?v=202609171505"></script>
+  <script src="js/status.js?v=202609171505"></script>
+  <script src="js/icons.js?v=202609171505"></script>
+  <script src="js/sky.js?v=202609171505"></script>
+  <script src="js/clock.js?v=202609171505"></script>
+  <script src="js/weather.js?v=202609171505"></script>
+  <script src="js/radar.js?v=202609171505"></script>
+  <script src="js/news.js?v=202609171505"></script>
+  <script src="js/quotes.js?v=202609171505"></script>
+  <script src="js/tips-data.js?v=202609171505"></script>
+  <script src="js/radio.js?v=202609171505"></script>
+  <script src="js/tips.js?v=202609171505"></script>
+  <script src="js/app.js?v=202609171505"></script>
 </body>
 </html>
