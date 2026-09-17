@@ -54,6 +54,7 @@
   --text-shadow: 0 1px 2px rgba(0, 0, 25, .22);
 
   --ease: cubic-bezier(.22, .61, .36, 1);
+  --bar-h: 6.8rem; /* altura da faixa inferior: dica de filme (esq.) e rádio (dir.) */
 }
 
 html {
@@ -699,10 +700,11 @@ body.no-quotes .quotes { display: none; }
 
 .tip {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   gap: .95rem;
   margin-top: .9rem;
   width: 100%; /* mesma largura da faixa de previsão acima */
+  height: var(--bar-h); /* mesma altura do rádio ao lado */
   padding: .55rem .8rem .55rem .55rem;
   border-radius: 18px;
   background: var(--glass);
@@ -718,8 +720,8 @@ body.no-tips .tip, .tip.is-empty { display: none; }
 
 .tip-poster {
   flex: 0 0 auto;
-  width: 3.6rem;
-  min-height: 5rem;
+  width: 3.9rem;
+  height: 100%;
   border-radius: 10px;
   background: linear-gradient(160deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, .04)) center / cover no-repeat;
   box-shadow: 0 6px 16px -6px rgba(0, 0, 20, .6);
@@ -768,7 +770,7 @@ body.no-tips .tip, .tip.is-empty { display: none; }
   .day { padding: .4rem .3rem .35rem; gap: .15rem; }
   .day .wicon { width: 1.9rem; height: 1.9rem; }
   .tip { align-items: center; gap: .7rem; margin-top: .6rem; padding: .4rem .7rem .4rem .4rem; }
-  .tip-poster { width: 2.6rem; min-height: 3.4rem; }
+  .tip-poster { width: 2.6rem; }
   .tip-body { gap: .05rem; }
   .tip-title { font-size: 1rem; display: inline; }
   .tip-meta { display: inline-flex; margin-left: .5rem; }
@@ -1246,11 +1248,11 @@ body.no-radio .side { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
   --amber-glow: 0 0 6px rgba(255, 170, 60, .85), 0 0 18px rgba(255, 140, 30, .35);
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto auto;
   align-items: center;
-  gap: 1rem;
-  height: 6.4rem;
-  padding: .55rem 1.1rem .55rem 1rem;
+  gap: .9rem;
+  height: var(--bar-h);
+  padding: .8rem 1.1rem .55rem 1rem;
   border-radius: 12px;
   /* faceplate: plástico escuro com escovado e bisel */
   background:
@@ -1278,16 +1280,90 @@ body.no-radio .side { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
   pointer-events: none;
 }
 .radio-brand b { font-family: var(--font-display); font-weight: 700; color: rgba(255, 255, 255, .55); }
-.slot {
-  /* fenda do toca-fitas */
+.cd-slot {
+  /* fenda de entrada do CD, no topo do painel */
   position: absolute;
-  left: 32%; right: 32%;
-  bottom: .32rem;
-  height: 3px;
+  left: 30%; right: 30%;
+  top: .28rem;
+  height: 4px;
   border-radius: 2px;
-  background: #050506;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 1), 0 1px 0 rgba(255, 255, 255, .07);
+  background: #030304;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 1), 0 1px 0 rgba(255, 255, 255, .08);
 }
+.cd-slot::after {
+  /* brilho do disco dentro da fenda, só quando tocando */
+  content: "";
+  position: absolute;
+  left: 8%; right: 8%; top: 1px;
+  height: 2px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 200, 120, .0), rgba(255, 220, 160, .35), rgba(255, 200, 120, 0), transparent);
+  opacity: 0;
+  transition: opacity .6s;
+}
+.radio[data-state="playing"] .cd-slot::after { opacity: 1; }
+
+/* ---- baia do CD: janela com o disco girando + eject ---- */
+.cd-bay { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+.cd-window {
+  position: relative;
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  background: #050506;
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 1),
+    0 0 0 2px #1c1d22,
+    0 0 0 3px #000,
+    0 1px 0 3px rgba(255, 255, 255, .06);
+  overflow: hidden;
+}
+.cd-window::after {
+  /* vidro da janela */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .18) 0%, rgba(255, 255, 255, .03) 38%, rgba(0, 0, 0, 0) 60%);
+  pointer-events: none;
+}
+.cd-disc {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #0b0c0f 0 15%, #b9bec8 15% 20%, #6c7079 20% 24%, transparent 24% 100%),
+    conic-gradient(from 0deg, #d7dcf5 0deg, #f7d3ec 40deg, #d2f4ea 80deg, #fff3c9 120deg, #d7dcf5 160deg, #e6d0ff 200deg, #cfe9ff 240deg, #ffe1d1 280deg, #d7f5e1 320deg, #d7dcf5 360deg);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .5), 0 0 6px rgba(0, 0, 0, .8);
+  animation: cd-spin 1.6s linear infinite;
+  animation-play-state: paused;
+}
+.cd-disc::after {
+  /* reflexo em leque, típico de CD */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 210deg, rgba(255, 255, 255, 0) 0deg, rgba(255, 255, 255, .55) 25deg, rgba(255, 255, 255, 0) 60deg, rgba(255, 255, 255, 0) 180deg, rgba(255, 255, 255, .35) 205deg, rgba(255, 255, 255, 0) 240deg);
+  mix-blend-mode: screen;
+}
+.radio[data-state="playing"] .cd-disc { animation-play-state: running; }
+.radio[data-state="loading"] .cd-disc { animation-play-state: running; animation-duration: 3.2s; }
+@keyframes cd-spin { to { transform: rotate(360deg); } }
+.eject-btn {
+  width: 2.2rem;
+  height: 1rem;
+  padding: 0;
+  font-size: .55rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, .7);
+  background: linear-gradient(180deg, #2c2d33, #17181c 60%, #101114);
+  border: 1px solid #060708;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), inset 0 -1px 0 rgba(0, 0, 0, .8), 0 1px 2px rgba(0, 0, 0, .7);
+  cursor: pointer;
+}
+.eject-btn:active { transform: translateY(1px); box-shadow: inset 0 1px 3px rgba(0, 0, 0, .9); }
 
 /* ---- knobs ---- */
 .knob {
@@ -1387,10 +1463,22 @@ body.no-radio .side { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
   background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, 0));
   pointer-events: none;
 }
-.vfd-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; min-width: 0; }
+.vfd-row { display: flex; align-items: baseline; gap: .9rem; min-width: 0; }
+.vfd-row > .vfd-flags { margin-left: auto; }
+.vfd-eq { margin-left: 0; }
+.vfd-track {
+  flex: 0 0 auto;
+  font-size: .62rem;
+  letter-spacing: .12em;
+  color: rgba(255, 190, 110, .75);
+  border-right: 1px solid rgba(255, 182, 72, .25);
+  padding-right: .7rem;
+}
+.vfd-track b { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--amber); margin-left: .15rem; }
 .vfd-name {
+  flex: 0 1 auto;
   font-family: var(--font-display);
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 600;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -1422,7 +1510,7 @@ body.no-radio .side { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
   color: var(--amber);
   text-shadow: var(--amber-glow);
 }
-.vfd-status { flex: 0 0 auto; white-space: nowrap; }
+.vfd-status { flex: 0 0 auto; margin-left: auto; white-space: nowrap; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: rgba(255, 190, 110, .85); }
 .radio[data-state="error"] .vfd-status { color: #ff7a5a; text-shadow: 0 0 8px rgba(255, 90, 50, .8); }
 .radio[data-state="loading"] .vfd-status { animation: vfd-blink 1s steps(2) infinite; }
 @keyframes vfd-blink { to { opacity: .35; } }
@@ -1472,7 +1560,11 @@ body.no-radio .side { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
 @media (max-width: 1400px) { .presets { grid-template-columns: repeat(2, auto); } .seek-btn { font-size: .55rem; padding: .28rem .45rem; } }
 /* telas baixas (TV): sem presets nem rótulos, só display, seek e knobs */
 @media (min-width: 900px) and (orientation: landscape) and (max-height: 620px) {
-  .radio { height: 4.6rem; gap: .7rem; padding: .4rem .8rem; grid-template-columns: auto minmax(0, 1fr) auto auto; }
+  :root { --bar-h: 4.6rem; }
+  .radio { gap: .7rem; padding: .55rem .8rem .4rem; grid-template-columns: auto minmax(0, 1fr) auto auto auto; }
+  .cd-window { width: 2.4rem; height: 2.4rem; }
+  .eject-btn { display: none; }
+  .vfd-track { display: none; }
   .knob { width: 2.7rem; height: 2.7rem; }
   .knob-label, .radio-brand { display: none; }
   .knob--vol .knob-face::after { display: none; }
@@ -1521,10 +1613,13 @@ body.no-radio .side { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
   .presets { grid-column: 1 / -1; grid-template-columns: repeat(8, auto); justify-content: center; }
   .seek { grid-column: 1 / -1; flex-direction: row; justify-content: center; }
   .knob--tune { display: none; }
+  .cd-bay { display: none; }
   .radar-map-wrap { min-height: 22rem; }
   .news-items { grid-auto-rows: auto; overflow: visible; }
   .news-items li a { padding: .7rem .4rem .7rem 0; }
   .news-lead { height: auto; min-height: 9.4rem; }
+  .tip { height: auto; }
+  .tip-poster { height: auto; min-height: 5rem; }
   .news-list { padding-bottom: 0; }
 }
 

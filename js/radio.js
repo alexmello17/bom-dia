@@ -60,6 +60,7 @@ const Radio = (() => {
     if (!s) return;
     els.name.textContent = s.nome;
     els.desc.textContent = s.descricao || "";
+    if (els.track) els.track.textContent = String(index + 1).padStart(2, "0");
     Util.$$(".preset", els.presets).forEach((b, i) => b.setAttribute("aria-pressed", String(i === index)));
     els.tune.style.setProperty("--angle", `${tuneAngle}deg`);
     Util.storage.set("radio", { index, volume: audio.volume });
@@ -133,6 +134,8 @@ const Radio = (() => {
     els.volume = Util.$("#radio-volume");
     els.presets = Util.$("#radio-presets");
     els.tune = Util.$("#radio-tune");
+    els.track = Util.$("#radio-track");
+    els.eject = Util.$("#radio-eject");
     if (!els.box || !stations().length) return;
 
     bindAudio();
@@ -149,6 +152,7 @@ const Radio = (() => {
     bindKnob(els.tune, (steps) => (steps > 0 ? next() : prev()));
     els.next.addEventListener("click", next);
     els.prev.addEventListener("click", prev);
+    if (els.eject) els.eject.addEventListener("click", () => (audio.paused ? play() : pause()));
     els.volume.addEventListener("input", () => setVolume(Number(els.volume.value) / 100));
 
     // atalhos: P toca/pausa, [ e ] trocam de estação; teclas de mídia do controle também
