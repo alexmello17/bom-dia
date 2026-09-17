@@ -65,14 +65,12 @@ const CONFIG = {
     ]
   },
 
-  // Luzes: "auto" (céu pela hora), "cor", "arco-iris", "onda" ou "respiracao".
-  // Também pelo botão no canto da tela, pela tecla L ou por ?luz=arco-iris. A escolha fica salva no navegador.
-  luzes: { modo: "auto", matiz: 285, velocidade: 40 },
-
   radio: true,
   radioOpcoes: {
     volume: 0.8,
     tocarAoAbrir: false, // navegadores só permitem autoplay com som depois de uma interação
+    // Iluminação do painel (botão ILL ou tecla L): "padrao" (âmbar), "cor", "arco-iris" ou "respiracao"
+    iluminacao: { modo: "padrao", matiz: 36, velocidade: 40 },
     // Streams públicos em HTTPS (necessário no site publicado). Ordem = ordem no player.
     estacoes: [
       { nome: "Antena 1", descricao: "Soft hits e flashbacks, 94,7 São Paulo", url: "https://antenaone.crossradio.com.br/stream/1;" },
