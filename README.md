@@ -67,6 +67,10 @@ aportes: [
 - `exibir: "percentual"` esconde os valores em R$ e mostra só a variação — útil se a página for publicada em um endereço público.
 - A lista vazia mostra apenas a cotação.
 
+### Rádio
+
+Player abaixo das notícias com estações de flashback e clássicos ao vivo: Antena 1, Alpha FM, Nova Brasil, Rádio Cidade, Kiss FM, 89 FM e duas webrádios de flashback. Botão ▶ toca/pausa, ‹ › trocam de estação; no teclado ou controle, `P`, `[` e `]` (teclas de mídia também funcionam). A última estação e o volume ficam salvos. Os navegadores só permitem começar a tocar depois de um clique/toque; `radioOpcoes.tocarAoAbrir: true` tenta mesmo assim. As estações ficam em `radioOpcoes.estacoes` (use streams HTTPS).
+
 ### Dica de filme ou série
 
 As dicas vêm de uma lista curada de filmes e séries de 1980 a 2010 em [`js/tips-data.js`](js/tips-data.js) — clássicos internacionais e brasileiros, com sinopse curta. A ordem é embaralhada por dia e os títulos trocam a cada `dicasOpcoes.intervalo` segundos (padrão 10; mouse em cima pausa). Com `intervalo: 0` fica um título por dia, e `deslocamento` pula para outro. O pôster vem da Wikipédia (sem chave) e fica em cache. Para editar a lista, basta acrescentar itens no mesmo formato. Clicar na dica abre a busca do título na Wikipédia.
@@ -140,6 +144,7 @@ js/
   news.js           getNews() e carrossel
   quotes.js         getBitcoin(), posição em BTC
   tips.js           getTip() — dica do dia (lista em tips-data.js)
+  radio.js          player de rádio ao vivo
   app.js            inicialização e agendamento
 ```
 

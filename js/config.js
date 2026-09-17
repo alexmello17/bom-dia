@@ -65,6 +65,23 @@ const CONFIG = {
     ]
   },
 
+  radio: true,
+  radioOpcoes: {
+    volume: 0.8,
+    tocarAoAbrir: false, // navegadores só permitem autoplay com som depois de uma interação
+    // Streams públicos em HTTPS (necessário no site publicado). Ordem = ordem no player.
+    estacoes: [
+      { nome: "Antena 1", descricao: "Soft hits e flashbacks, 94,7 São Paulo", url: "https://antenaone.crossradio.com.br/stream/1;" },
+      { nome: "Alpha FM", descricao: "Adulto contemporâneo, 101,7 São Paulo", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_ALPHAFM_ADP.aac" },
+      { nome: "Nova Brasil FM", descricao: "MPB e música brasileira, 89,7 São Paulo", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/NOVABRASIL_SPAAC.aac" },
+      { nome: "Rádio Cidade", descricao: "Rock clássico, 102,9 Rio de Janeiro", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/RADIOCIDADEAAC.aac" },
+      { nome: "Kiss FM", descricao: "Classic rock, 92,5 São Paulo", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_KISSFMAAC.aac" },
+      { nome: "89 FM", descricao: "A Rádio Rock, São Paulo", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_89FM_ADP.aac" },
+      { nome: "Amigos do Flashback", descricao: "Webrádio, só flashback anos 70, 80 e 90", url: "https://stm4.voxhd.com.br:7086/;" },
+      { nome: "Studio Flashback", descricao: "Webrádio de flashback", url: "https://stream-163.zeno.fm/6gv76f1xruquv" }
+    ]
+  },
+
   dicasOpcoes: {
     intervalo: 10,   // segundos entre uma dica e outra (0 = uma dica por dia)
     deslocamento: 0  // com intervalo 0, pula para outro título sem esperar o dia seguinte

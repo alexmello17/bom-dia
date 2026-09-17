@@ -436,7 +436,7 @@ body.wx-snow .sky-rain i:nth-child(2) { animation-duration: 13s; }
 
 .side {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto;
   gap: var(--gap);
   min-height: 0;
   min-width: 0;
@@ -774,6 +774,9 @@ body.no-tips .tip, .tip.is-empty { display: none; }
   .tip-meta { display: inline-flex; margin-left: .5rem; }
   .tip-synopsis { margin-top: .05rem; font-size: .82rem; -webkit-line-clamp: 1; }
   .weather-sub .section-status, .quotes .section-status { display: none; }
+  .radio { padding: .45rem .8rem .45rem .55rem; gap: .7rem; }
+  .radio-play { width: 2.4rem; height: 2.4rem; }
+  .radio-desc { display: none; }
 }
 /* Em telas muito baixas a dica sai para o resto caber sem rolagem */
 @media (min-width: 900px) and (orientation: landscape) and (max-height: 480px) {
@@ -1232,6 +1235,97 @@ body.no-tips .tip, .tip.is-empty { display: none; }
 @keyframes dot-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 /* =========================================================
+   RÁDIO — player compacto abaixo das notícias
+   ========================================================= */
+
+body.no-radio .radio { display: none; }
+body.no-radio .side { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
+
+.radio {
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  padding: .7rem 1.1rem .7rem .8rem;
+  border-radius: 22px;
+}
+.radio-play {
+  flex: 0 0 auto;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 1px solid rgba(46, 242, 255, .35);
+  background: rgba(46, 242, 255, .12);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background .25s, box-shadow .25s;
+}
+.radio-play:hover { background: rgba(46, 242, 255, .2); }
+.radio[data-state="playing"] .radio-play { box-shadow: 0 0 18px rgba(46, 242, 255, .45); }
+
+/* ícone: barras de equalizador; paradas formam o "play" */
+.radio-eq { display: flex; align-items: flex-end; gap: 3px; height: 1.1rem; }
+.radio-eq i { width: 3px; height: 30%; background: var(--neon-cyan); border-radius: 2px; box-shadow: 0 0 6px rgba(46, 242, 255, .7); }
+.radio[data-state="playing"] .radio-eq i { animation: eq .9s ease-in-out infinite; }
+.radio[data-state="playing"] .radio-eq i:nth-child(2) { animation-delay: -.3s; }
+.radio[data-state="playing"] .radio-eq i:nth-child(3) { animation-delay: -.6s; }
+.radio[data-state="playing"] .radio-eq i:nth-child(4) { animation-delay: -.15s; }
+.radio[data-state="loading"] .radio-eq i { animation: eq 1.6s ease-in-out infinite; opacity: .6; }
+.radio:not([data-state="playing"]):not([data-state="loading"]) .radio-eq {
+  /* triângulo de play quando parada */
+  width: 0; height: 0; gap: 0;
+  border-left: .8rem solid var(--neon-cyan);
+  border-top: .5rem solid transparent;
+  border-bottom: .5rem solid transparent;
+  margin-left: 3px;
+  filter: drop-shadow(0 0 6px rgba(46, 242, 255, .7));
+}
+.radio:not([data-state="playing"]):not([data-state="loading"]) .radio-eq i { display: none; }
+@keyframes eq { 0%, 100% { height: 30%; } 50% { height: 100%; } }
+
+.radio-info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: .1rem; }
+.radio-line { display: flex; align-items: baseline; gap: .8rem; min-width: 0; }
+.radio-line b { font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
+.radio-status { font-size: .78rem; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.radio[data-state="playing"] .radio-status { color: var(--neon-cyan); }
+.radio[data-state="error"] .radio-status { color: #ff9ab8; }
+.radio-desc { font-size: .82rem; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.radio-controls { flex: 0 0 auto; display: flex; align-items: center; gap: .4rem; }
+.radio-skip {
+  width: 2.1rem; height: 2.1rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .14);
+  background: rgba(255, 255, 255, .08);
+  color: var(--ink);
+  font-size: 1.4rem;
+  line-height: 1;
+  padding: 0 0 .15rem;
+  cursor: pointer;
+  transition: background .25s;
+}
+.radio-skip:hover { background: rgba(255, 255, 255, .16); }
+.radio-volume { display: flex; align-items: center; margin-left: .5rem; }
+.radio-volume input {
+  width: 5.5rem;
+  height: 1.2rem;
+  margin: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+.radio-volume input::-webkit-slider-runnable-track { height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .25); }
+.radio-volume input::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 11px; height: 11px; margin-top: -4px;
+  border-radius: 50%; background: #fff;
+  box-shadow: 0 0 8px rgba(46, 242, 255, .7);
+}
+.radio-volume input::-moz-range-track { height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .25); }
+.radio-volume input::-moz-range-thumb { width: 11px; height: 11px; border: 0; border-radius: 50%; background: #fff; }
+
+/* =========================================================
    ÍCONES METEOROLÓGICOS — animações
    ========================================================= */
 
@@ -1266,6 +1360,7 @@ body.no-tips .tip, .tip.is-empty { display: none; }
   .hero { padding: .2rem 0 .4rem; }
   .weather { margin: 1.8rem 0 1rem; padding: 0; }
   .side { grid-template-rows: none; }
+  .radio-desc { display: none; }
   .radar-map-wrap { min-height: 22rem; }
   .news-items { grid-auto-rows: auto; overflow: visible; }
   .news-items li a { padding: .7rem .4rem .7rem 0; }
@@ -1313,6 +1408,7 @@ body.tv .radar-approach { margin-top: .4rem; }
 body.tv .radar-stats { margin-top: .55rem; padding-top: .55rem; }
 body.tv .quotes { margin-top: .9rem; }
 body.tv .tip { margin-top: .7rem; }
+body.tv .radio-volume { display: none; } /* na TV o volume é do controle remoto */
 
 /* Movimento reduzido: o céu continua mudando de cor, mas parado */
 @media (prefers-reduced-motion: reduce) {

@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark">
   <title>Bom dia</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/style.css?v=202609171433">
+  <link rel="stylesheet" href="css/style.css?v=202609171446">
 </head>
 <body class="scene-night wx-clear">
 
@@ -151,22 +151,40 @@
         <nav id="news-dots" class="news-dots" aria-label="Páginas de notícias"></nav>
       </section>
 
+      <section id="radio" class="panel radio" data-state="idle" aria-label="Rádio">
+        <button id="radio-play" type="button" class="radio-play" aria-label="Tocar ou pausar (P)">
+          <span class="radio-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        </button>
+        <div class="radio-info">
+          <span class="radio-line"><b id="radio-name">—</b><span id="radio-status" class="radio-status">Pronta para tocar</span></span>
+          <span id="radio-desc" class="radio-desc"></span>
+        </div>
+        <div class="radio-controls">
+          <button id="radio-prev" type="button" class="radio-skip" aria-label="Estação anterior ([)">‹</button>
+          <button id="radio-next" type="button" class="radio-skip" aria-label="Próxima estação (])">›</button>
+          <label class="radio-volume" aria-label="Volume">
+            <input id="radio-volume" type="range" min="0" max="100" value="80">
+          </label>
+        </div>
+      </section>
+
     </aside>
   </main>
 
-  <script src="js/config.js?v=202609171433"></script>
+  <script src="js/config.js?v=202609171446"></script>
   <script src="js/config.local.js" onerror="this.remove()"></script>
-  <script src="js/utils.js?v=202609171433"></script>
-  <script src="js/status.js?v=202609171433"></script>
-  <script src="js/icons.js?v=202609171433"></script>
-  <script src="js/sky.js?v=202609171433"></script>
-  <script src="js/clock.js?v=202609171433"></script>
-  <script src="js/weather.js?v=202609171433"></script>
-  <script src="js/radar.js?v=202609171433"></script>
-  <script src="js/news.js?v=202609171433"></script>
-  <script src="js/quotes.js?v=202609171433"></script>
-  <script src="js/tips-data.js?v=202609171433"></script>
-  <script src="js/tips.js?v=202609171433"></script>
-  <script src="js/app.js?v=202609171433"></script>
+  <script src="js/utils.js?v=202609171446"></script>
+  <script src="js/status.js?v=202609171446"></script>
+  <script src="js/icons.js?v=202609171446"></script>
+  <script src="js/sky.js?v=202609171446"></script>
+  <script src="js/clock.js?v=202609171446"></script>
+  <script src="js/weather.js?v=202609171446"></script>
+  <script src="js/radar.js?v=202609171446"></script>
+  <script src="js/news.js?v=202609171446"></script>
+  <script src="js/quotes.js?v=202609171446"></script>
+  <script src="js/tips-data.js?v=202609171446"></script>
+  <script src="js/radio.js?v=202609171446"></script>
+  <script src="js/tips.js?v=202609171446"></script>
+  <script src="js/app.js?v=202609171446"></script>
 </body>
 </html>

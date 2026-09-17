@@ -30,12 +30,14 @@ const App = (() => {
     if (CONFIG.noticias) News.init();
     if (CONFIG.cotacoes) Quotes.init();
     if (CONFIG.dicas) Tips.init();
+    if (CONFIG.radio) Radio.init();
 
     document.body.classList.toggle("no-radar", !CONFIG.radar);
     document.body.classList.toggle("no-news", !CONFIG.noticias);
     document.body.classList.toggle("no-weather", !CONFIG.clima);
     document.body.classList.toggle("no-quotes", !CONFIG.cotacoes);
     document.body.classList.toggle("no-tips", !CONFIG.dicas);
+    document.body.classList.toggle("no-radio", !CONFIG.radio);
 
     if (CONFIG.clima) jobs.weather = schedule("clima", Weather.refresh, CONFIG.intervalos.clima);
     if (CONFIG.radar) jobs.radar = schedule("radar", Radar.refresh, CONFIG.intervalos.radar);
