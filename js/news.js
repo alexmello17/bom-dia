@@ -120,20 +120,31 @@ const News = (() => {
           </li>`).join("")}
       </ul>`;
 
-  // Quantas notícias cabem em uma página: mede a altura livre abaixo da manchete
+  // Quantas notícias cabem em uma página: mede a altura livre abaixo da manchete.
+  // Se não sobrar espaço nem para uma linha, a manchete encolhe (e perde a sinopse).
   function itemsPerPage(list) {
     const box = car.box;
+    box.style.removeProperty("--lead-h");
+    box.classList.remove("is-tight");
     box.innerHTML = leadHtml(list[0]) + itemsHtml([list[1] || list[0]]);
     const cs = getComputedStyle(box);
     const inner = box.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    const gap = parseFloat(cs.rowGap) || 0;
     const lead = box.querySelector(".news-lead").offsetHeight;
     const ul = box.querySelector(".news-items");
     const ucs = getComputedStyle(ul);
     const rowH = parseFloat(ucs.gridAutoRows) || ul.querySelector("li").offsetHeight;
     const rowGap = parseFloat(ucs.rowGap) || 0;
     const cols = ucs.gridTemplateColumns.split(" ").length;
-    const avail = inner - lead - (parseFloat(cs.rowGap) || 0);
-    const rows = Math.max(1, Math.floor((avail + rowGap) / (rowH + rowGap)));
+    let rows = Math.floor((inner - lead - gap + rowGap) / (rowH + rowGap));
+    if (rows < 1) {
+      const leadH = inner - gap - rowH;
+      if (leadH >= 72) { // ainda dá uma manchete decente: encolhe em vez de cortar a lista
+        box.style.setProperty("--lead-h", `${leadH}px`);
+        box.classList.add("is-tight");
+      }
+      rows = 1;
+    }
     return rows * cols;
   }
 
