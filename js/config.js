@@ -80,7 +80,18 @@ const CONFIG = {
       { nome: "Kiss FM", descricao: "Classic rock, 92,5 São Paulo", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_KISSFMAAC.aac" },
       { nome: "89 FM", descricao: "A Rádio Rock, São Paulo", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_89FM_ADP.aac" },
       { nome: "Amigos do Flashback", descricao: "Webrádio, só flashback anos 70, 80 e 90", url: "https://stm4.voxhd.com.br:7086/;" },
-      { nome: "Studio Flashback", descricao: "Webrádio de flashback", url: "https://stream-163.zeno.fm/6gv76f1xruquv" }
+      { nome: "Studio Flashback", descricao: "Webrádio de flashback", url: "https://stream-163.zeno.fm/6gv76f1xruquv" },
+
+      // --- Banco 2: emissoras da região de Piraju (distância aproximada) ---
+      { nome: "Mater Dei FM", descricao: "105,9 Piraju", url: "https://cc6.streammaximum.com/proxy/materdeifm/stream" },
+      { nome: "Rádio W3", descricao: "Ipaussu, 29 km", url: "https://stm51.srvstm.com:11074/stream" },
+      { nome: "Nova FM", descricao: "104,9 Ribeirão Claro, 38 km", url: "https://stm2.streamproarte.com.br:7238/stream" },
+      { nome: "Nova Onda FM", descricao: "87,9 Itaí, 39 km", url: "https://stm28.srvaudio.com.br:9906/;" },
+      { nome: "Antena A FM", descricao: "103,1 Santa Cruz do Rio Pardo, 41 km", url: "https://sonicpanel.oficialserver.com:7028/stream" },
+      { nome: "Clarim FM", descricao: "100,5 Itaí, 39 km", url: "https://shout35.crossradio.com.br:18032/stream" },
+      // As duas abaixo exigem um token que expira; o endereço do Radio Garden resolve isso a cada conexão.
+      { nome: "Jovem Pan Avaré", descricao: "102,1 Avaré, 48 km", url: "https://radio.garden/api/ara/content/listen/z7WwEIbY/channel.mp3" },
+      { nome: "Divisa FM", descricao: "93,3 Ourinhos, 55 km", url: "https://radio.garden/api/ara/content/listen/936Xrhfe/channel.mp3" }
     ]
   },
 

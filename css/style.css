@@ -1254,7 +1254,7 @@ body.no-radio .side { grid-template-rows: minmax(0, var(--radar-fr, 1.45fr)) min
   --amber-glow: 0 0 6px hsl(var(--ill-h) 100% 60% / .85), 0 0 18px hsl(var(--ill-h) 100% 50% / .35);
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
   align-items: center;
   gap: .9rem;
   height: var(--bar-h);
@@ -1286,91 +1286,6 @@ body.no-radio .side { grid-template-rows: minmax(0, var(--radar-fr, 1.45fr)) min
   pointer-events: none;
 }
 .radio-brand b { font-family: var(--font-display); font-weight: 700; color: rgba(255, 255, 255, .55); }
-.cd-slot {
-  /* fenda de entrada do CD, no topo do painel */
-  position: absolute;
-  left: 30%; right: 30%;
-  top: .28rem;
-  height: 4px;
-  border-radius: 2px;
-  background: #030304;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 1), 0 1px 0 rgba(255, 255, 255, .08);
-}
-.cd-slot::after {
-  /* brilho do disco dentro da fenda, só quando tocando */
-  content: "";
-  position: absolute;
-  left: 8%; right: 8%; top: 1px;
-  height: 2px;
-  border-radius: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 200, 120, .0), rgba(255, 220, 160, .35), rgba(255, 200, 120, 0), transparent);
-  opacity: 0;
-  transition: opacity .6s;
-}
-.radio[data-state="playing"] .cd-slot::after { opacity: 1; }
-
-/* ---- baia do CD: janela com o disco girando + eject ---- */
-.cd-bay { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
-.cd-window {
-  position: relative;
-  width: 3.2rem;
-  height: 3.2rem;
-  border-radius: 50%;
-  background: #050506;
-  box-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 1),
-    0 0 0 2px #1c1d22,
-    0 0 0 3px #000,
-    0 1px 0 3px rgba(255, 255, 255, .06);
-  overflow: hidden;
-}
-.cd-window::after {
-  /* vidro da janela */
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: linear-gradient(160deg, rgba(255, 255, 255, .18) 0%, rgba(255, 255, 255, .03) 38%, rgba(0, 0, 0, 0) 60%);
-  pointer-events: none;
-}
-.cd-disc {
-  position: absolute;
-  inset: 8%;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, #0b0c0f 0 15%, #b9bec8 15% 20%, #6c7079 20% 24%, transparent 24% 100%),
-    conic-gradient(from 0deg, #d7dcf5 0deg, #f7d3ec 40deg, #d2f4ea 80deg, #fff3c9 120deg, #d7dcf5 160deg, #e6d0ff 200deg, #cfe9ff 240deg, #ffe1d1 280deg, #d7f5e1 320deg, #d7dcf5 360deg);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .5), 0 0 6px rgba(0, 0, 0, .8);
-  animation: cd-spin 1.6s linear infinite;
-  animation-play-state: paused;
-}
-.cd-disc::after {
-  /* reflexo em leque, típico de CD */
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: conic-gradient(from 210deg, rgba(255, 255, 255, 0) 0deg, rgba(255, 255, 255, .55) 25deg, rgba(255, 255, 255, 0) 60deg, rgba(255, 255, 255, 0) 180deg, rgba(255, 255, 255, .35) 205deg, rgba(255, 255, 255, 0) 240deg);
-  mix-blend-mode: screen;
-}
-.radio[data-state="playing"] .cd-disc { animation-play-state: running; }
-.radio[data-state="loading"] .cd-disc { animation-play-state: running; animation-duration: 3.2s; }
-@keyframes cd-spin { to { transform: rotate(360deg); } }
-.eject-btn {
-  width: 2.2rem;
-  height: 1rem;
-  padding: 0;
-  font-size: .55rem;
-  line-height: 1;
-  color: rgba(255, 255, 255, .7);
-  background: linear-gradient(180deg, #2c2d33, #17181c 60%, #101114);
-  border: 1px solid #060708;
-  border-radius: 3px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), inset 0 -1px 0 rgba(0, 0, 0, .8), 0 1px 2px rgba(0, 0, 0, .7);
-  cursor: pointer;
-}
-.eject-btn:active { transform: translateY(1px); box-shadow: inset 0 1px 3px rgba(0, 0, 0, .9); }
-
 /* ---- botão ILL e painel de iluminação ---- */
 .ill-btn {
   position: absolute;
@@ -1547,15 +1462,16 @@ body.no-radio .side { grid-template-rows: minmax(0, var(--radar-fr, 1.45fr)) min
 .vfd-row { display: flex; align-items: baseline; gap: .9rem; min-width: 0; }
 .vfd-row > .vfd-flags { margin-left: auto; }
 .vfd-eq { margin-left: 0; }
-.vfd-track {
+.vfd-band {
   flex: 0 0 auto;
-  font-size: .62rem;
-  letter-spacing: .12em;
-  color: hsl(var(--ill-h) 100% 72% / .75);
+  font-family: var(--font-display);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  color: var(--amber);
   border-right: 1px solid var(--amber-dim);
   padding-right: .7rem;
 }
-.vfd-track b { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--amber); margin-left: .15rem; }
 .vfd-name {
   flex: 0 1 auto;
   font-family: var(--font-display);
@@ -1618,7 +1534,22 @@ body.no-radio .side { grid-template-rows: minmax(0, var(--radar-fr, 1.45fr)) min
 .radio[data-state="playing"] .vfd-led { background: var(--amber); box-shadow: var(--amber-glow); }
 
 /* ---- presets e seek ---- */
+.presets-wrap { display: flex; align-items: stretch; gap: .35rem; }
 .presets { display: grid; grid-template-columns: repeat(4, auto); gap: .3rem .35rem; }
+.band-btn {
+  width: 1.9rem;
+  font-family: var(--font-display);
+  font-size: .56rem;
+  letter-spacing: .06em;
+  color: var(--amber);
+  text-shadow: var(--amber-glow);
+  background: linear-gradient(180deg, #2c2d33, #17181c 60%, #101114);
+  border: 1px solid #060708;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), inset 0 -1px 0 rgba(0, 0, 0, .8), 0 1px 2px rgba(0, 0, 0, .7);
+  cursor: pointer;
+}
+.band-btn:active { transform: translateY(1px); box-shadow: inset 0 1px 3px rgba(0, 0, 0, .9); }
 .preset, .seek-btn {
   font-family: var(--font-display);
   font-size: .62rem;
@@ -1638,18 +1569,20 @@ body.no-radio .side { grid-template-rows: minmax(0, var(--radar-fr, 1.45fr)) min
 .seek-btn { padding: .3rem .55rem; white-space: nowrap; }
 
 /* ---- telas menores ---- */
-@media (max-width: 1400px) { .presets { grid-template-columns: repeat(2, auto); } .seek-btn { font-size: .55rem; padding: .28rem .45rem; } }
+@media (max-width: 1400px) {
+  .seek-btn { font-size: .55rem; padding: .26rem .4rem; }
+  .band-btn { width: 1.5rem; font-size: .5rem; }
+  .preset { width: 1.5rem; height: 1.2rem; font-size: .55rem; }
+  .presets { gap: .25rem .28rem; }
+}
 /* telas baixas (TV): sem presets nem rótulos, só display, seek e knobs */
 @media (min-width: 900px) and (orientation: landscape) and (max-height: 620px) {
   :root { --bar-h: 4.6rem; }
-  .radio { gap: .7rem; padding: .55rem .8rem .4rem; grid-template-columns: auto minmax(0, 1fr) auto auto auto; }
-  .cd-window { width: 2.4rem; height: 2.4rem; }
-  .eject-btn { display: none; }
-  .vfd-track { display: none; }
+  .radio { gap: .7rem; padding: .55rem .8rem .4rem; grid-template-columns: auto minmax(0, 1fr) auto auto; }
+  .presets-wrap { display: none; }
   .knob { width: 2.7rem; height: 2.7rem; }
   .knob-label, .radio-brand, .ill-btn { display: none; }
   .knob--vol .knob-face::after { display: none; }
-  .presets { display: none; }
   .vfd { height: 3.2rem; padding: .35rem .6rem; }
   .vfd-name { font-size: 1rem; }
   .vfd-desc { display: none; }
@@ -1691,10 +1624,10 @@ body.no-radio .side { grid-template-rows: minmax(0, var(--radar-fr, 1.45fr)) min
   .weather { margin: 1.8rem 0 1rem; padding: 0; }
   .side { grid-template-rows: none; }
   .radio { height: auto; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto auto; row-gap: .8rem; padding-bottom: 1.4rem; }
-  .presets { grid-column: 1 / -1; grid-template-columns: repeat(8, auto); justify-content: center; }
+  .presets-wrap { grid-column: 1 / -1; justify-content: center; }
+  .presets { grid-template-columns: repeat(8, auto); }
   .seek { grid-column: 1 / -1; flex-direction: row; justify-content: center; }
   .knob--tune { display: none; }
-  .cd-bay { display: none; }
   .radar-map-wrap { min-height: 22rem; }
   .news-items { grid-auto-rows: auto; overflow: visible; }
   .news-items li a { padding: .7rem .4rem .7rem 0; }

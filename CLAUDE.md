@@ -7,7 +7,7 @@ Painel pessoal de início do dia do Alex (Piraju/SP), em **HTML/CSS/JS puro, sem
 - **Sem servidor, sem Node em runtime, sem chaves.** Tudo é estático e usa APIs públicas. Não sugerir backend/Raspberry Pi — foi descartado no início.
 - **Sem ES modules.** Scripts clássicos carregados em ordem no `index.html`, cada um expõe um objeto global (`Util`, `Sky`, `Weather`, `Radar`, `News`, `Quotes`, `Tips`, `Radio`, `Lights`, `Status`, `Clock`, `App`). Motivo: a página precisa abrir em `file://`, onde módulos são bloqueados.
 - **Visual retrowave** já aprovado: céu que muda com a hora (cenas `dawn/morning/afternoon/sunset/night`) e com o tempo (`wx-*`), sol listrado no **centro da tela** apoiado na grade do horizonte, lua com fase real, nuvens SVG com contorno neon, Orbitron nos números grandes, Sora no resto. Não voltar ao visual "sky natural" nem mexer na posição do sol sem pedido.
-- **Rádio é um CD player automotivo** (display VFD, knobs VOL/TUNE, presets, SEEK, eject, botão ILL). A iluminação (cor) é **só do rádio**, não do fundo — o Alex foi explícito nisso.
+- **Rádio é um head unit automotivo FM** (display VFD, knobs VOL/TUNE, presets em bancos FM1/FM2, SEEK, botão ILL). A parte de CD foi removida a pedido do Alex — não reintroduzir disco/eject/faixa. A iluminação (cor) é **só do rádio**, não do fundo — ele foi explícito nisso.
 - Dados pessoais: a posição em BTC está hoje no `config.js` público **por decisão do Alex**. Se ele pedir privacidade de volta, o caminho pronto é `js/config.local.js` (gitignored) ou `?btc=…&investido=…` (salva só no navegador).
 
 ## Como publicar
@@ -37,7 +37,7 @@ GitHub Pages serve `main` na raiz: <https://alexmello17.github.io/bom-dia/> (atu
 | `js/news.js` | RSS via rss2json/allorigins; carrossel paginado por altura medida, 10 s por página, setas do teclado |
 | `js/quotes.js` | Bitcoin (CoinGecko, Binance reserva) + dólar (AwesomeAPI); posição com `ajusteVenda` do Mercado Pago |
 | `js/tips.js` + `tips-data.js` | dica de filme/série 1980–2010; índice amarrado ao relógio (recarregar não reinicia), pôster da Wikipédia |
-| `js/radio.js` | streams HTTPS; knobs com roda/arrasto; presets; teclas P [ ] + -; reconexão |
+| `js/radio.js` | streams HTTPS; knobs com roda/arrasto; presets em bancos de 8 (FM1/FM2, tecla B); teclas P [ ] + -; reconexão |
 | `js/lights.js` | iluminação do rádio (`--ill-h`/`--ill-l` em `#radio`); tecla L, `,` `.` |
 | `js/status.js` | "Atualizado há X min" por seção (`data-status`) |
 | `js/app.js` | agendamento com retentativa (`schedule`), evento `online`, modo TV |
@@ -52,7 +52,7 @@ Padrão de módulo: `init()` + `refresh()` que devolve `true/false`; registrar e
 - **Google News RSS** não passa em nenhum proxy CORS confiável; **rss2json** funciona para G1/BBC/Folha; Agência Brasil já tem CORS.
 - **CoinGecko** falha às vezes → Binance BTCBRL como reserva. Histórico antes de 2020 via BTCUSDT × dólar do dia (AwesomeAPI).
 - Wikipédia em inglês fornece os pôsteres (pt.wiki não tem fair use).
-- Áudio: streams precisam ser HTTPS (site é HTTPS); autoplay só após interação do usuário.
+- Áudio: streams precisam ser HTTPS (site é HTTPS); autoplay só após interação do usuário. As emissoras da região vieram da API do Radio Garden (`radio.garden/api/ara/content/places` + `/page/{placeId}/channels`, com User-Agent de navegador e Referer) — o diretório do Radio Browser quase não cobre o interior. Jovem Pan Avaré e Divisa FM exigem token temporário, por isso usam a URL `radio.garden/api/ara/content/listen/{id}/channel.mp3`, que resolve o token a cada conexão.
 
 ## Preferências do Alex observadas
 

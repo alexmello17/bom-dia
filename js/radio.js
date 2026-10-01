@@ -8,6 +8,9 @@ const Radio = (() => {
   let retryTimer = null;
   let flashTimer = null;
   let tuneAngle = 0;
+  let banco = 0; // banco de presets visível (8 estações por banco, como FM1/FM2 dos rádios de carro)
+  const POR_BANCO = 8;
+  const bancos = () => Math.max(1, Math.ceil(stations().length / POR_BANCO));
 
   const stations = () => CONFIG.radioOpcoes.estacoes || [];
 
@@ -34,10 +37,29 @@ const Radio = (() => {
   }
 
   function renderPresets() {
-    els.presets.innerHTML = stations().map((st, i) =>
-      `<button type="button" class="preset" data-i="${i}" aria-label="${Util.escapeHtml(st.nome)}" title="${Util.escapeHtml(st.nome)}">${i + 1}</button>`).join("");
+    const lista = stations().slice(banco * POR_BANCO, (banco + 1) * POR_BANCO);
+    els.presets.innerHTML = lista.map((st, k) => {
+      const i = banco * POR_BANCO + k;
+      return `<button type="button" class="preset" data-i="${i}" aria-label="${Util.escapeHtml(st.nome)}" title="${Util.escapeHtml(st.nome)}">${k + 1}</button>`;
+    }).join("");
     Util.$$(".preset", els.presets).forEach(b => b.addEventListener("click", () => load(Number(b.dataset.i), true)));
+    const nome = `FM${banco + 1}`;
+    if (els.band) els.band.textContent = nome;
+    if (els.bandInd) els.bandInd.textContent = nome;
+    marcarPreset();
   }
+
+  function marcarPreset() {
+    Util.$$(".preset", els.presets).forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.i) === index)));
+  }
+
+  // Mostra o banco da estação que está tocando
+  function sincronizarBanco() {
+    const alvo = Math.floor(index / POR_BANCO);
+    if (alvo !== banco) { banco = alvo; renderPresets(); } else { marcarPreset(); }
+  }
+
+  const trocarBanco = () => { banco = (banco + 1) % bancos(); renderPresets(); };
 
   // Liga o comportamento de "girar" a um knob: roda do mouse e arrasto vertical
   function bindKnob(el, onStep) {
@@ -60,8 +82,7 @@ const Radio = (() => {
     if (!s) return;
     els.name.textContent = s.nome;
     els.desc.textContent = s.descricao || "";
-    if (els.track) els.track.textContent = String(index + 1).padStart(2, "0");
-    Util.$$(".preset", els.presets).forEach((b, i) => b.setAttribute("aria-pressed", String(i === index)));
+    sincronizarBanco();
     els.tune.style.setProperty("--angle", `${tuneAngle}deg`);
     Util.storage.set("radio", { index, volume: audio.volume });
     if ("mediaSession" in navigator) {
@@ -134,8 +155,8 @@ const Radio = (() => {
     els.volume = Util.$("#radio-volume");
     els.presets = Util.$("#radio-presets");
     els.tune = Util.$("#radio-tune");
-    els.track = Util.$("#radio-track");
-    els.eject = Util.$("#radio-eject");
+    els.band = Util.$("#radio-band");
+    els.bandInd = Util.$("#radio-band-ind");
     if (!els.box || !stations().length) return;
 
     bindAudio();
@@ -152,7 +173,7 @@ const Radio = (() => {
     bindKnob(els.tune, (steps) => (steps > 0 ? next() : prev()));
     els.next.addEventListener("click", next);
     els.prev.addEventListener("click", prev);
-    if (els.eject) els.eject.addEventListener("click", () => (audio.paused ? play() : pause()));
+    if (els.band) els.band.addEventListener("click", trocarBanco);
     els.volume.addEventListener("input", () => setVolume(Number(els.volume.value) / 100));
 
     // atalhos: P toca/pausa, [ e ] trocam de estação; teclas de mídia do controle também
@@ -161,6 +182,7 @@ const Radio = (() => {
       if (e.key === "p" || e.key === "P" || e.key === "MediaPlayPause") { toggle(); e.preventDefault(); }
       if (e.key === "+" || e.key === "=") { setVolume(audio.volume + 0.05); e.preventDefault(); }
       if (e.key === "-" || e.key === "_") { setVolume(audio.volume - 0.05); e.preventDefault(); }
+      if (e.key === "b" || e.key === "B") { trocarBanco(); e.preventDefault(); }
       if (e.key === "]" || e.key === "MediaTrackNext") { next(); e.preventDefault(); }
       if (e.key === "[" || e.key === "MediaTrackPrevious") { prev(); e.preventDefault(); }
     });
