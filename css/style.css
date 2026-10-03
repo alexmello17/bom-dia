@@ -694,6 +694,16 @@ body.no-quotes .quotes { display: none; }
 .day .wicon { width: 2.3rem; height: 2.3rem; margin: .15rem 0; color: #fff; }
 .day-max { font-size: 1.28rem; font-weight: 500; letter-spacing: -.02em; }
 .day-min { font-size: 1.02rem; font-weight: 300; color: var(--ink-2); }
+.day-rain {
+  margin-top: .15rem;
+  font-size: .78rem;
+  font-weight: 400;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 8px rgba(46, 242, 255, .4);
+  white-space: nowrap;
+}
+.day-rain i { font-style: normal; color: var(--ink-3); text-shadow: none; }
+.day-rain--none::before { content: "—"; color: var(--ink-4); }
 
 /* =========================================================
    DICA DE HOJE — filme ou série

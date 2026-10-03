@@ -32,7 +32,7 @@ GitHub Pages serve `main` na raiz: <https://alexmello17.github.io/bom-dia/> (atu
 |---|---|
 | `js/config.js` | tudo configurável (nome, cidade, intervalos, fontes RSS, aportes BTC, estações de rádio, iluminação) |
 | `js/sky.js` | cena por hora (usa nascer/pôr do sol do clima), atmosfera por tempo, lua com fase (algoritmo local, hemisfério sul) |
-| `js/weather.js` | Open-Meteo (clima, 7 dias, UV, vento/direção) + Air Quality; alimenta `Sky` e `Radar` via `Weather.onUpdate` |
+| `js/weather.js` | Open-Meteo (clima, 7 dias, UV, vento/direção) + Air Quality; alimenta `Sky` e `Radar` via `Weather.onUpdate`. **O ícone de cada dia vem de `resumirDia()`, não do `weather_code` diário** — ver limitações |
 | `js/radar.js` | Leaflet (cdnjs) + RainViewer (frames passados e nowcast) sobre tiles Esri; timeline animada |
 | `js/news.js` | RSS via rss2json/allorigins; carrossel paginado por altura medida, 10 s por página, setas do teclado |
 | `js/quotes.js` | Bitcoin (CoinGecko, Binance reserva) + dólar (AwesomeAPI); posição com `ajusteVenda` do Mercado Pago |
@@ -47,6 +47,7 @@ Padrão de módulo: `init()` + `refresh()` que devolve `true/false`; registrar e
 
 ## Limitações conhecidas das APIs gratuitas
 
+- **Open-Meteo**: o `weather_code` **diário** é o código mais severo do dia — uma única hora de trovoada marcava o dia inteiro como tempestade (era a queixa de "previsão furada"). Por isso `resumirDia()` em `weather.js` classifica o dia pelas horas 6h–21h (horas de chuva, horas de trovoada, total em mm, nuvens médias); trovoada só com ≥2 horas, e trovão isolado vira aviso no tooltip. O `codeApi` original fica guardado para esse detalhe. A chamada envia `elevation` (561 m em Piraju, vindo da geocodificação) para corrigir o viés de temperatura do ponto de grade.
 - **RainViewer** público: radar só até zoom 7 (usamos tiles 512px + `zoomOffset:-1`) e sempre paleta "Universal Blue" (o parâmetro de cor é ignorado). Rate limit: manter poucos frames (6 passados + nowcast).
 - **CARTO** passou a exigir chave → mapa-base é Esri (Dark Gray + Reference; imagens para satélite).
 - **Google News RSS** não passa em nenhum proxy CORS confiável; **rss2json** funciona para G1/BBC/Folha; Agência Brasil já tem CORS.

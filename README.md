@@ -108,7 +108,7 @@ O repositório é público, então a posição em Bitcoin não fica no código:
 
 | Dado | Serviço | Observações |
 |---|---|---|
-| Clima atual e previsão | [Open-Meteo](https://open-meteo.com) | Gratuito, sem chave. Temperatura, sensação, umidade, vento (com direção e rajadas), índice UV, nascer/pôr do sol e previsão de 7 dias. |
+| Clima atual e previsão | [Open-Meteo](https://open-meteo.com) (o ícone de cada dia é calculado hora a hora, não pelo código "mais severo do dia") | Gratuito, sem chave. Temperatura, sensação, umidade, vento (com direção e rajadas), índice UV, nascer/pôr do sol e previsão de 7 dias. |
 | Qualidade do ar | [Open-Meteo Air Quality](https://open-meteo.com/en/docs/air-quality-api) | Índice AQI (EUA) com PM2,5 e PM10; se falhar, o resto do clima continua. |
 | Radar de chuva | [RainViewer](https://www.rainviewer.com/api.html) | Últimos ~60 min + previsão de 30 min quando disponível. O serviço público entrega radar até o zoom 7; acima disso a imagem é ampliada. |
 | Mapa-base | Esri (World Dark Gray / World Imagery) | Tiles públicos com atribuição no próprio mapa. |

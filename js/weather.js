@@ -23,7 +23,7 @@ const Weather = (() => {
     }
     const key = `loc:${CONFIG.cidade}|${CONFIG.estado}|${CONFIG.pais}`;
     const cached = Util.storage.get(key);
-    if (cached) return cached;
+    if (cached && cached.elev !== undefined) return cached; // cache antigo não tinha elevação
 
     const url = `${GEO_URL}?name=${encodeURIComponent(CONFIG.cidade)}&count=10&language=pt&format=json&countryCode=${encodeURIComponent(CONFIG.pais)}`;
     const res = await Util.fetchJSON(url);
@@ -32,7 +32,7 @@ const Weather = (() => {
 
     const wanted = (UF[CONFIG.estado] || CONFIG.estado || "").toLowerCase();
     const match = results.find(r => (r.admin1 || "").toLowerCase() === wanted) || results[0];
-    const loc = { lat: match.latitude, lon: match.longitude, nome: match.name, timezone: match.timezone };
+    const loc = { lat: match.latitude, lon: match.longitude, nome: match.name, timezone: match.timezone, elev: match.elevation };
     Util.storage.set(key, loc);
     return loc;
   }
@@ -42,10 +42,12 @@ const Weather = (() => {
     const params = new URLSearchParams({
       latitude: loc.lat, longitude: loc.lon,
       current: "temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,surface_pressure,cloud_cover,uv_index",
-      hourly: "temperature_2m,precipitation_probability,precipitation,weather_code",
-      daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,sunrise,sunset,uv_index_max",
-      timezone: "auto", forecast_days: 7, forecast_hours: 24
+      hourly: "temperature_2m,precipitation_probability,precipitation,weather_code,cloud_cover",
+      daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,precipitation_hours,sunrise,sunset,uv_index_max",
+      timezone: "auto", forecast_days: 7
     });
+    // a elevação real da cidade corrige o viés de temperatura do ponto de grade
+    if (loc.elev != null) params.set("elevation", Math.round(loc.elev));
     return Util.fetchJSON(`${FORECAST_URL}?${params}`);
   }
 
@@ -72,6 +74,31 @@ const Weather = (() => {
     if (aqi <= 50) return "Boa"; if (aqi <= 100) return "Moderada"; if (aqi <= 150) return "Ruim p/ sensíveis"; if (aqi <= 200) return "Ruim"; if (aqi <= 300) return "Muito ruim"; return "Perigosa";
   }
 
+  // ---------- resumo do dia ----------
+  // O weather_code diário da API é o código MAIS SEVERO do dia: uma pancada de 20 min
+  // transforma um dia nublado em "trovoada". Aqui o dia é resumido pelas próprias horas.
+  function resumirDia(horas, totalPrecip) {
+    const dia = horas.filter(h => h.time.getHours() >= 6 && h.time.getHours() <= 21);
+    if (!dia.length) return null;
+    const chuvosas = dia.filter(h => (h.precip ?? 0) >= 0.2);
+    const trovoadas = dia.filter(h => h.code >= 95);
+    const pico = Math.max(0, ...dia.map(h => h.precip ?? 0));
+    const soma = totalPrecip ?? dia.reduce((a, h) => a + (h.precip || 0), 0);
+    const nuvens = dia.reduce((a, h) => a + (h.cloud ?? 0), 0) / dia.length;
+
+    // trovoada só quando é mesmo o retrato do dia; um trovão isolado vira aviso no detalhe
+    if (trovoadas.length >= 2) return 95;
+    if (soma >= 15 || pico >= 6) return 65;                       // chuva forte
+    if (chuvosas.length >= 4 || soma >= 5) return 63;             // chuva
+    if (chuvosas.length >= 3) return 61;                          // chuva fraca
+    if (chuvosas.length >= 1) return 80;                          // pancadas isoladas
+    if (dia.filter(h => (h.precip ?? 0) >= 0.05).length >= 3) return 51; // garoa
+    if (dia.filter(h => h.code === 45 || h.code === 48).length >= 3) return 45;
+    if (nuvens >= 70) return 3;                                   // nublado
+    if (nuvens >= 30) return 2;                                   // parcialmente nublado
+    return 0;                                                     // limpo
+  }
+
   // Transforma a resposta da API no formato interno usado pela interface
   function normalize(raw, loc, air) {
     const c = raw.current;
@@ -81,12 +108,19 @@ const Weather = (() => {
       temp: raw.hourly.temperature_2m[i],
       prob: raw.hourly.precipitation_probability[i],
       precip: raw.hourly.precipitation[i],
-      code: raw.hourly.weather_code[i]
+      code: raw.hourly.weather_code[i],
+      cloud: raw.hourly.cloud_cover ? raw.hourly.cloud_cover[i] : null
     }));
-    const daily = raw.daily.time.map((t, i) => ({
+    const daily = raw.daily.time.map((t, i) => {
+      const horasDoDia = hourly.filter(h => h.time.toDateString() === new Date(t + "T12:00:00").toDateString());
+      const resumo = resumirDia(horasDoDia, raw.daily.precipitation_sum[i]);
+      const code = resumo != null ? resumo : raw.daily.weather_code[i];
+      return {
       date: new Date(t + "T12:00:00"),
-      code: raw.daily.weather_code[i],
-      ...Icons.describe(raw.daily.weather_code[i], true),
+      code,
+      codeApi: raw.daily.weather_code[i], // o mais severo do dia, para o detalhe
+      horasChuva: raw.daily.precipitation_hours ? raw.daily.precipitation_hours[i] : null,
+      ...Icons.describe(code, true),
       max: raw.daily.temperature_2m_max[i],
       min: raw.daily.temperature_2m_min[i],
       prob: raw.daily.precipitation_probability_max[i],
@@ -94,7 +128,7 @@ const Weather = (() => {
       uvMax: raw.daily.uv_index_max ? raw.daily.uv_index_max[i] : null,
       sunrise: new Date(raw.daily.sunrise[i]),
       sunset: new Date(raw.daily.sunset[i])
-    }));
+    };});
     return {
       location: { ...loc, timezone: raw.timezone },
       current: {
@@ -163,13 +197,27 @@ const Weather = (() => {
     Util.$("#weather-sunset").textContent = Util.formatHour(t.sunset);
 
     const todayKey = new Date().toDateString();
-    Util.$("#forecast").innerHTML = d.daily.slice(0, 7).map(day => `
-      <li class="day${day.date.toDateString() === todayKey ? " is-today" : ""}" title="${Util.escapeHtml(day.label)}${day.prob ? ` — ${day.prob}% de chance de chuva` : ""}">
+    Util.$("#forecast").innerHTML = d.daily.slice(0, 7).map(day => {
+      const mm = day.precip ?? 0;
+      const detalhe = [
+        day.label,
+        day.prob ? `${day.prob}% de chance de chuva` : "sem chuva prevista",
+        mm >= 0.1 ? `${Util.fmtNumber(mm)} mm` : null,
+        day.horasChuva ? `${Util.fmtNumber(day.horasChuva, 0)} h de chuva` : null,
+        day.codeApi >= 95 && day.code < 95 ? "risco de trovoada isolada" : null
+      ].filter(Boolean).join(" · ");
+      const chuva = day.prob >= 20 || mm >= 0.5
+        ? `<span class="day-rain">${Util.round(day.prob || 0)}%${mm >= 1 ? ` <i>${Util.fmtNumber(mm, 0)}mm</i>` : ""}</span>`
+        : `<span class="day-rain day-rain--none"></span>`;
+      return `
+      <li class="day${day.date.toDateString() === todayKey ? " is-today" : ""}" title="${Util.escapeHtml(detalhe)}">
         <span class="day-name">${day.date.toDateString() === todayKey ? "Hoje" : DIAS[day.date.getDay()]}</span>
         ${Icons.render(day.icon, "wicon--small")}
         <span class="day-max">${Util.round(day.max)}°</span>
         <span class="day-min">${Util.round(day.min)}°</span>
-      </li>`).join("");
+        ${chuva}
+      </li>`;
+    }).join("");
 
     Sky.setSun(t.sunrise, t.sunset);
     Sky.setWeatherMood(cur.mood);
